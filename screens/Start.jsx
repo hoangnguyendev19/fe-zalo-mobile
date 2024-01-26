@@ -15,7 +15,7 @@ const Start = ({ navigation }) => {
           backgroundColor: '#0091ff',
           borderRadius: 30,
         }}
-        onPress={() => navigation.navigate('login')}
+        onPress={() => navigation.navigate('Login')}
       >
         <Text
           style={{ textAlign: 'center', fontSize: 20, color: '#fff', textTransform: 'uppercase' }}
@@ -31,7 +31,7 @@ const Start = ({ navigation }) => {
           backgroundColor: 'rgba(0,0,0,0.1)',
           borderRadius: 30,
         }}
-        onPress={() => navigation.navigate('signup')}
+        onPress={() => navigation.navigate('Signup')}
       >
         <Text
           style={{ textAlign: 'center', fontSize: 20, color: '#000', textTransform: 'uppercase' }}
