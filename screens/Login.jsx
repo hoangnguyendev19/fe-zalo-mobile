@@ -3,7 +3,7 @@ import { Text, View, TextInput, Pressable } from 'react-native';
 
 const Login = ({ navigation }) => {
   const handleLogin = () => {
-    navigation.navigate('login');
+    navigation.navigate('Login');
   };
 
   return (
@@ -58,7 +58,7 @@ const Login = ({ navigation }) => {
         </Text>
       </Pressable>
       <Link
-        to={{ screen: 'forgotPassword' }}
+        to={{ screen: 'ForgotPassword' }}
         style={{
           marginHorizontal: 15,
           marginTop: 30,

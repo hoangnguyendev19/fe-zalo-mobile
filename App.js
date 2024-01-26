@@ -5,6 +5,8 @@ import Start from './screens/Start';
 import Login from './screens/Login';
 import ForgotPassword from './screens/ForgotPassword';
 import Signup from './screens/Signup';
+import Messager from './screens/Messager';
+import Main from './screens/Main';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,9 +14,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen options={{ headerShown: false }} name="start" component={Start} />
+        <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
+        <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
         <Stack.Screen
-          name="signup"
+          name="Signup"
           options={{
             title: 'Đăng ký',
             headerStyle: { backgroundColor: '#0091ff' },
@@ -24,7 +27,7 @@ export default function App() {
           component={Signup}
         />
         <Stack.Screen
-          name="login"
+          name="Login"
           options={{
             title: 'Đăng nhập',
             headerStyle: { backgroundColor: '#0091ff' },
@@ -34,7 +37,7 @@ export default function App() {
           component={Login}
         />
         <Stack.Screen
-          name="forgotPassword"
+          name="ForgotPassword"
           options={{
             title: 'Lấy lại mật khẩu',
             headerStyle: { backgroundColor: '#0091ff' },
