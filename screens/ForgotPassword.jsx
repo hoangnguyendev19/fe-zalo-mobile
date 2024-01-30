@@ -16,7 +16,7 @@ const ForgotPassword = ({ navigation }) => {
         placeholder="Số điện thoại"
         placeholderTextColor="rgba(0,0,0,0.5)"
         style={{
-          outlineStyle: 'none',
+          // outlineStyle: 'none',
           paddingVertical: 10,
           borderBottomWidth: 1,
           borderStyle: 'solid',

@@ -7,16 +7,16 @@ const Tab = createMaterialTopTabNavigator();
 
 const Contact = () => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Tab.Navigator>
         <Tab.Screen
           name="Friend"
-          options={{ title: 'Bạn bè', tabBarLabelStyle: { fontSize: 18, fontWeight: 'bold' } }}
+          options={{ title: 'Bạn bè', tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' } }}
           component={Friend}
         />
         <Tab.Screen
           name="Group"
-          options={{ title: 'Nhóm', tabBarLabelStyle: { fontSize: 18, fontWeight: 'bold' } }}
+          options={{ title: 'Nhóm', tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' } }}
           component={Group}
         />
       </Tab.Navigator>

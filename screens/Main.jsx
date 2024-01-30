@@ -6,12 +6,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Messager from './Messager';
 import Contact from './Contact';
 import Profile from './Profile';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
 const Main = () => {
   return (
-    <View style={{ width: '100%', height: '100%', flex: 1 }}>
+    <SafeAreaView style={{ width: '100%', height: '100%', flex: 1 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -21,15 +22,15 @@ const Main = () => {
           backgroundColor: '#0091ff',
         }}
       >
-        <EvilIcons name="search" size={32} color="white" />
+        <EvilIcons name="search" size={26} color="white" />
         <TextInput
           placeholder="Tìm kiếm"
           placeholderTextColor="white"
-          style={{ marginHorizontal: 5, outlineStyle: 'none', width: '100%', fontSize: 20 }}
+          style={{ marginHorizontal: 5, outlineStyle: 'none', width: '100%', fontSize: 16 }}
         />
         <Fontisto name="plus-a" size={32} color="white" />
       </View>
-      <Tab.Navigator screenOptions={{ tabBarStyle: { paddingVertical: 10 } }}>
+      <Tab.Navigator screenOptions={{ tabBarStyle: {} }}>
         <Tab.Screen
           name="Messager"
           options={{
@@ -64,7 +65,7 @@ const Main = () => {
           component={Profile}
         />
       </Tab.Navigator>
-    </View>
+    </SafeAreaView>
   );
 };
 
