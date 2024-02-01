@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
+import ImgUser from '../assets/images/img-user.png';
 
 const MessageCover = () => {
   return (
@@ -12,15 +13,12 @@ const MessageCover = () => {
         paddingVertical: 10,
       }}
     >
-      <Avatar.Image
-        size={60}
-        source="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      />
+      <Avatar.Image size={50} source={ImgUser} />
       <View style={{ marginLeft: 10, flex: 1 }}>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 20, fontWeight: 'bold' }}>
+        <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 18, fontWeight: 'bold' }}>
           CNMOI_2024_DHKTPM16B
         </Text>
-        <Text numberOfLines={1} style={{ fontSize: 18, color: 'rgba(0,0,0,0.2)' }}>
+        <Text numberOfLines={1} style={{ fontSize: 16, color: 'rgba(0,0,0,0.2)' }}>
           Nguyen Huy Hoang: Nhan tin
         </Text>
       </View>

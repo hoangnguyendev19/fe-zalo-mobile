@@ -1,11 +1,12 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, TextBase, View } from 'react-native';
 import Logo from '../assets/images/logo.png';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Start = ({ navigation }) => {
   return (
-    <View style={{ width: '100%', alignItems: 'center', flex: 1 }}>
+    <SafeAreaView style={{ width: '100%', alignItems: 'center', flex: 1 }}>
       <View style={{ marginTop: 100 }}>
-        <Image source={Logo} style={{ width: 300, height: 100 }} />
+        <Image source={Logo} width={100} height={100} />
       </View>
       <Pressable
         style={{
@@ -45,12 +46,12 @@ const Start = ({ navigation }) => {
           fontSize: 20,
           fontWeight: 'bold',
           marginTop: 'auto',
-          marginBottom: 30,
+          marginBottom: 50,
         }}
       >
         Tiếng Việt
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
