@@ -1,6 +1,5 @@
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import {  TextInput, View } from 'react-native';
 import { EvilIcons, Fontisto, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import BottomTabs from './Main';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Messager from './Messager';
@@ -26,7 +25,7 @@ const Main = () => {
         <TextInput
           placeholder="Tìm kiếm"
           placeholderTextColor="white"
-          style={{ marginHorizontal: 5, outlineStyle: 'none', width: '100%', fontSize: 16 }}
+          style={{ marginHorizontal: 5, width: '100%', fontSize: 16 }}
         />
         <Fontisto name="plus-a" size={32} color="white" />
       </View>
