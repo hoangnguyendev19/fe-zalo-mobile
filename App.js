@@ -8,9 +8,12 @@ import Main from './screens/Main';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PaperProvider } from 'react-native-paper';
 import Chat from './screens/Chat';
+<<<<<<< HEAD
 import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+=======
+>>>>>>> 23cda4cd4dc0948aac9accf83522a3f006d68085
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +23,10 @@ export default function App() {
       <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
+            <Stack.Screen options={{ headerShown: true }} name="Chat" component={Chat} />
+
             <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
+            <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
             <Stack.Screen
               options={{
                 title: 'Chat',
