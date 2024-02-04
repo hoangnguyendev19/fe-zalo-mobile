@@ -2,7 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import ImgUser from '../assets/images/img-user.png';
 
-const MessageCover = () => {
+const MessageCover = ({ navigation }) => {
   return (
     <Pressable
       style={{
@@ -12,6 +12,7 @@ const MessageCover = () => {
         paddingHorizontal: 15,
         paddingVertical: 10,
       }}
+      onPress={() => navigation.navigate('Chat')}
     >
       <Avatar.Image size={50} source={ImgUser} />
       <View style={{ marginLeft: 10, flex: 1 }}>
