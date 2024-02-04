@@ -1,19 +1,19 @@
 import { ScrollView } from 'react-native';
 import MessageCover from '../components/MessageCover';
 
-const Messager = () => {
+const Messager = ({ navigation }) => {
   return (
     <ScrollView>
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
-      <MessageCover />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
+      <MessageCover navigation={navigation} />
     </ScrollView>
   );
 };
