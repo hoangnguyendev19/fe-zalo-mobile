@@ -20,8 +20,10 @@ export default function App() {
       <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
+            <Stack.Screen options={{ headerShown: true }} name="Chat" component={Chat} />
+
             <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
+            <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
             <Stack.Screen
               options={{
                 title: 'Chat',
