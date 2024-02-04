@@ -2,7 +2,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
 import ContactCover from '../components/ContactCover';
 
-const Friend = () => {
+const Friend = ({ navigation }) => {
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <Pressable
@@ -37,17 +37,18 @@ const Friend = () => {
           maxHeight: 500,
         }}
       >
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
-        <ContactCover />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
+        <ContactCover navigation={navigation} />
       </ScrollView>
     </View>
   );

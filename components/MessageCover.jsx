@@ -16,7 +16,7 @@ const MessageCover = ({ navigation }) => {
     >
       <Avatar.Image size={50} source={ImgUser} />
       <View style={{ marginLeft: 10, flex: 1 }}>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 18, fontWeight: 'bold' }}>
+        <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 16, fontWeight: 'bold' }}>
           CNMOI_2024_DHKTPM16B
         </Text>
         <Text numberOfLines={1} style={{ fontSize: 16, color: 'rgba(0,0,0,0.2)' }}>

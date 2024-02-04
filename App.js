@@ -11,6 +11,8 @@ import Chat from './screens/Chat';
 import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import AddFriend from './screens/AddFriend';
+import InforProfile from './screens/InforProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,10 +22,8 @@ export default function App() {
       <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen options={{ headerShown: true }} name="Chat" component={Chat} />
-
-            <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
             <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
+            <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
             <Stack.Screen
               options={{
                 title: 'Chat',
@@ -50,12 +50,32 @@ export default function App() {
               component={Chat}
             />
             <Stack.Screen
+              name="AddFriend"
+              options={{
+                title: 'Thêm bạn',
+                headerStyle: { backgroundColor: '#0091ff' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontSize: 16 },
+              }}
+              component={AddFriend}
+            />
+            <Stack.Screen
+              name="InforProfile"
+              options={{
+                title: 'Thông tin cá nhân',
+                headerStyle: { backgroundColor: '#0091ff' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontSize: 16 },
+              }}
+              component={InforProfile}
+            />
+            <Stack.Screen
               name="Signup"
               options={{
                 title: 'Đăng ký',
                 headerStyle: { backgroundColor: '#0091ff' },
                 headerTintColor: '#fff',
-                headerTitleStyle: { fontSize: 20 },
+                headerTitleStyle: { fontSize: 16 },
               }}
               component={Signup}
             />
@@ -65,7 +85,7 @@ export default function App() {
                 title: 'Đăng nhập',
                 headerStyle: { backgroundColor: '#0091ff' },
                 headerTintColor: '#fff',
-                headerTitleStyle: { fontSize: 20 },
+                headerTitleStyle: { fontSize: 16 },
               }}
               component={Login}
             />
@@ -75,7 +95,7 @@ export default function App() {
                 title: 'Lấy lại mật khẩu',
                 headerStyle: { backgroundColor: '#0091ff' },
                 headerTintColor: '#fff',
-                headerTitleStyle: { fontSize: 20 },
+                headerTitleStyle: { fontSize: 16 },
               }}
               component={ForgotPassword}
             />

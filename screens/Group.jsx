@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MessageCover from '../components/MessageCover';
 
-const Group = () => {
+const Group = ({ navigation }) => {
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <View
@@ -25,14 +25,16 @@ const Group = () => {
           maxHeight: 500,
         }}
       >
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
-        <MessageCover />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
+        <MessageCover navigation={navigation} />
       </ScrollView>
     </View>
   );

@@ -1,15 +1,27 @@
-import {  TextInput, View } from 'react-native';
-import { EvilIcons, Fontisto, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { Pressable, TextInput, View } from 'react-native';
+import { EvilIcons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Messager from './Messager';
 import Contact from './Contact';
 import Profile from './Profile';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Divider, Menu } from 'react-native-paper';
+import { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 
-const Main = () => {
+const Main = ({ navigation }) => {
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
+  const handAddFriend = () => {
+    closeMenu();
+    navigation.navigate('AddFriend');
+  };
   return (
     <SafeAreaView style={{ width: '100%', height: '100%', flex: 1 }}>
       <View
@@ -25,9 +37,40 @@ const Main = () => {
         <TextInput
           placeholder="Tìm kiếm"
           placeholderTextColor="white"
-          style={{ marginHorizontal: 5, width: '100%', fontSize: 16 }}
+          style={{ marginHorizontal: 5, width: '80%', fontSize: 16 }}
         />
-        <Fontisto name="plus-a" size={32} color="white" />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
+        >
+          <Menu
+            visible={visible}
+            onDismiss={closeMenu}
+            anchorPosition="bottom"
+            style={{ paddingLeft: 10, paddingTop: 10 }}
+            anchor={
+              <Pressable style={{}} onPress={openMenu}>
+                <AntDesign name="plus" size={26} color="white" />
+              </Pressable>
+            }
+          >
+            <Menu.Item
+              onPress={handAddFriend}
+              title="Thêm bạn"
+              leadingIcon="account-plus-outline"
+              titleStyle={{ fontSize: 14 }}
+            />
+            <Divider />
+            <Menu.Item
+              onPress={() => {}}
+              title="Tạo nhóm"
+              leadingIcon="account-multiple-plus-outline"
+              titleStyle={{ fontSize: 14 }}
+            />
+          </Menu>
+        </View>
       </View>
       <Tab.Navigator screenOptions={{ tabBarStyle: {} }}>
         <Tab.Screen
