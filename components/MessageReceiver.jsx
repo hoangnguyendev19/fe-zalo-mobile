@@ -1,6 +1,8 @@
-import { Text, View } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { Pressable, Text, View } from 'react-native';
+import { Avatar, Divider, Menu } from 'react-native-paper';
 import ImgUser from '../assets/images/img-user.png';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 
 const MessageReceiver = () => {
   return (
@@ -25,7 +27,8 @@ const MessageReceiver = () => {
         }}
       >
         <Text>Hello, my name is Hoang!</Text>
-        <Text style={{ color: 'rgba(0,0,0,0.2)', fontSize: 12 }}>16:40</Text>
+        <Text style={{ color: 'rgba(0,0,0,0.2)', fontSize: 12, marginTop: 5 }}>16:40</Text>
+        <Ionicons name="heart" size={24} color="red" />
       </View>
     </View>
   );

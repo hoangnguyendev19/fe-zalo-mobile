@@ -4,9 +4,8 @@ import { Avatar } from 'react-native-paper';
 import background from '../assets/images/img-banner-1.png';
 import avt from '../assets/images/img-user.png';
 import LineInfor from '../components/LineInfor';
-import { EvilIcons, Entypo } from '@expo/vector-icons';
 
-const Profile = () => {
+const InforProfile = () => {
   const itemsInfor = [
     {
       title: <Text style={{ fontWeight: 500 }}>Giới Tính</Text>,
@@ -19,32 +18,6 @@ const Profile = () => {
     {
       title: <Text style={{ fontWeight: 500 }}>Email</Text>,
       content: <Text>tuong2003@gmail.com</Text>,
-    },
-  ];
-  const itemsChange = [
-    {
-      title: (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
-          <EvilIcons name="pencil" size={35} color="black" />
-        </View>
-      ),
-      content: <Text>Đổi thông tin</Text>,
-    },
-    {
-      title: (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
-          <EvilIcons name="lock" size={35} color="black" />
-        </View>
-      ),
-      content: <Text>Đổi mật khẩu</Text>,
-    },
-    {
-      title: (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
-          <Entypo name="log-out" size={24} color="red" />
-        </View>
-      ),
-      content: <Text style={{ color: 'red' }}>Đăng xuất</Text>,
     },
   ];
 
@@ -82,13 +55,8 @@ const Profile = () => {
           })}
         </View>
       </View>
-      <View style={{ marginTop: 20, marginHorizontal: 4, backgroundColor: 'white' }}>
-        {itemsChange.map((item, index) => {
-          return <LineInfor key={index} item={item} />;
-        })}
-      </View>
     </View>
   );
 };
 
-export default Profile;
+export default InforProfile;
