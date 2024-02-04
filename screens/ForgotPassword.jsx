@@ -25,23 +25,25 @@ const ForgotPassword = ({ navigation }) => {
           marginTop: 30,
         }}
       />
-      <Pressable
-        style={{
-          marginTop: 50,
-          paddingVertical: 15,
-          width: '80%',
-          backgroundColor: '#0091ff',
-          borderRadius: 30,
-          marginHorizontal: 'auto',
-        }}
-        onPress={handleSubmit}
-      >
-        <Text
-          style={{ textAlign: 'center', fontSize: 20, color: '#fff', textTransform: 'uppercase' }}
+      <View style={{flexDirection:'row',justifyContent:'center'}}>
+        <Pressable
+          style={{
+            marginTop: 50,
+            paddingVertical: 15,
+            width: '80%',
+            backgroundColor: '#0091ff',
+            borderRadius: 30,
+            marginHorizontal: 'auto',
+          }}
+          onPress={handleSubmit}
         >
-          Tiếp tục
-        </Text>
-      </Pressable>
+          <Text
+            style={{ textAlign: 'center', fontSize: 20, color: '#fff', textTransform: 'uppercase' }}
+          >
+            Tiếp tục
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
