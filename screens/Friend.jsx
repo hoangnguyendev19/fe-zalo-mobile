@@ -34,7 +34,6 @@ const Friend = ({ navigation }) => {
           borderTopWidth: 5,
           borderStyle: 'solid',
           borderColor: 'rgba(0,0,0,0.05)',
-          maxHeight: 500,
         }}
       >
         <ContactCover navigation={navigation} />

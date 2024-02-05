@@ -13,6 +13,7 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import AddFriend from './screens/AddFriend';
 import InforProfile from './screens/InforProfile';
+import CreateGroup from './screens/CreateGroup';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,16 @@ export default function App() {
                 headerTitleStyle: { fontSize: 16 },
               }}
               component={AddFriend}
+            />
+            <Stack.Screen
+              name="CreateGroup"
+              options={{
+                title: 'Tạo nhóm',
+                headerStyle: { backgroundColor: '#0091ff' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontSize: 16 },
+              }}
+              component={CreateGroup}
             />
             <Stack.Screen
               name="InforProfile"

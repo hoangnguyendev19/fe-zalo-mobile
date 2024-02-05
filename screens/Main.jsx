@@ -18,9 +18,13 @@ const Main = ({ navigation }) => {
 
   const closeMenu = () => setVisible(false);
 
-  const handAddFriend = () => {
+  const handleAddFriend = () => {
     closeMenu();
     navigation.navigate('AddFriend');
+  };
+  const handleCreateGroup = () => {
+    closeMenu();
+    navigation.navigate('CreateGroup');
   };
   return (
     <SafeAreaView style={{ width: '100%', height: '100%', flex: 1 }}>
@@ -57,14 +61,14 @@ const Main = ({ navigation }) => {
             }
           >
             <Menu.Item
-              onPress={handAddFriend}
+              onPress={handleAddFriend}
               title="Thêm bạn"
               leadingIcon="account-plus-outline"
               titleStyle={{ fontSize: 14 }}
             />
             <Divider />
             <Menu.Item
-              onPress={() => {}}
+              onPress={handleCreateGroup}
               title="Tạo nhóm"
               leadingIcon="account-multiple-plus-outline"
               titleStyle={{ fontSize: 14 }}
