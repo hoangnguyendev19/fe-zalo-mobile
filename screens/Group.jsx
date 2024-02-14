@@ -1,8 +1,13 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MessageCover from '../components/MessageCover';
+import { useSelector } from 'react-redux';
 
 const Group = ({ navigation }) => {
+  const { conversations } = useSelector((state) => state.conversation);
+  const groups =
+    conversations?.length > 0 && conversations?.filter((conver) => conver.type === 'GROUP');
+
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <Pressable
@@ -25,16 +30,10 @@ const Group = ({ navigation }) => {
           borderColor: 'rgba(0,0,0,0.05)',
         }}
       >
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
-        <MessageCover navigation={navigation} />
+        {groups.length > 0 &&
+          groups.map((group) => (
+            <MessageCover key={group.id} navigation={navigation} conver={group} />
+          ))}
       </ScrollView>
     </View>
   );

@@ -1,8 +1,11 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
 import ContactCover from '../components/ContactCover';
+import { useSelector } from 'react-redux';
 
 const Friend = ({ navigation }) => {
+  const { user } = useSelector((state) => state.user);
+
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <Pressable
@@ -36,18 +39,10 @@ const Friend = ({ navigation }) => {
           borderColor: 'rgba(0,0,0,0.05)',
         }}
       >
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
-        <ContactCover navigation={navigation} />
+        {user?.friendList?.length > 0 &&
+          user?.friendList?.map((friend) => (
+            <ContactCover key={friend.id} navigation={navigation} friend={friend} />
+          ))}
       </ScrollView>
     </View>
   );
