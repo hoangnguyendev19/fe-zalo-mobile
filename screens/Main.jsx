@@ -7,12 +7,28 @@ import Contact from './Contact';
 import Profile from './Profile';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Divider, Menu } from 'react-native-paper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ConversationAPI from '../api/ConversationAPI';
+import { getAllConversations } from '../redux/conversationSlice';
 
 const Tab = createBottomTabNavigator();
 
 const Main = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
+  const { accessToken } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await ConversationAPI.getAllConversationForUser(accessToken);
+      if (data) {
+        dispatch(getAllConversations(data));
+      }
+    };
+
+    fetchData();
+  }, [dispatch, accessToken]);
 
   const openMenu = () => setVisible(true);
 

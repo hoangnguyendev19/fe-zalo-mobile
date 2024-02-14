@@ -1,10 +1,55 @@
 import { Link } from '@react-navigation/native';
 import { Text, View, TextInput, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/userSlice';
+import UserAPI from '../api/UserAPI';
+import { Snackbar } from 'react-native-paper';
 
 const Login = ({ navigation }) => {
-  const handleLogin = () => {
-    navigation.navigate('Main');
+  const [phoneNumber, setPhoneNumber] = useState('0123456789');
+  const [password, setPassword] = useState('huynguyen@123');
+  const dispatch = useDispatch();
+
+  const [visible, setVisible] = useState(false);
+  const [err, setErr] = useState('');
+
+  const handleLogin = async () => {
+    if (phoneNumber === '') {
+      setErr('Bạn chưa nhập số điện thoại!');
+      setVisible(true);
+      return;
+    }
+    if (phoneNumber.length !== 10) {
+      setErr('Số điện thoại có 10 chữ số!');
+      setVisible(true);
+      return;
+    }
+
+    if (password === '') {
+      setErr('Bạn chưa nhập mật khẩu!');
+      setVisible(true);
+      return;
+    }
+
+    if (password.length < 10) {
+      setErr('Mật khẩu có ít nhất 10 ký tự!');
+      setVisible(true);
+      return;
+    }
+
+    const data = await UserAPI.login(phoneNumber, password);
+
+    if (data) {
+      dispatch(login(data));
+      setPhoneNumber('');
+      setPassword('');
+      navigation.navigate('Main');
+    } else {
+      setErr('Số điện thoại hoặc mật khẩu không chính xác!');
+      setVisible(true);
+    }
   };
 
   return (
@@ -30,13 +75,14 @@ const Login = ({ navigation }) => {
           fontSize: 16,
           marginTop: 30,
         }}
+        value={phoneNumber}
+        onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
         placeholder="Mật khẩu"
         secureTextEntry={true}
         placeholderTextColor="rgba(0,0,0,0.5)"
         style={{
-          // outlineStyle: 'none',
           paddingVertical: 10,
           borderBottomWidth: 1,
           borderStyle: 'solid',
@@ -44,6 +90,8 @@ const Login = ({ navigation }) => {
           fontSize: 16,
           marginTop: 20,
         }}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
       />
       <View style={{ display: 'flex', alignItems: 'center' }}>
         <Pressable
@@ -76,6 +124,18 @@ const Login = ({ navigation }) => {
       >
         Lấy lại mật khẩu
       </Link>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        action={{
+          label: 'OK',
+          onPress: () => {
+            setVisible(false);
+          },
+        }}
+      >
+        {err}
+      </Snackbar>
     </SafeAreaView>
   );
 };

@@ -1,10 +1,71 @@
 import { Link } from '@react-navigation/native';
+import { useState } from 'react';
 import { Text, View, TextInput, Pressable } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
+import UserAPI from '../api/UserAPI';
+import { signup } from '../redux/userSlice';
 
 const Signup = ({ navigation }) => {
-  const handleSignup = () => {
-    // navigation.navigate('Signup');
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
+  const dispatch = useDispatch();
+
+  const [visible, setVisible] = useState(false);
+  const [err, setErr] = useState('');
+
+  const handleSignup = async () => {
+    if (fullName.trim() === '') {
+      setErr('Bạn chưa nhập họ và tên!');
+      setVisible(true);
+      return;
+    }
+
+    if (phoneNumber.trim() === '') {
+      setErr('Bạn chưa nhập só điện thoại!');
+      setVisible(true);
+      return;
+    }
+
+    if (phoneNumber.length !== 10) {
+      setErr('Số điện thoại có 10 chữ số!');
+      setVisible(true);
+      return;
+    }
+
+    if (password.trim() === '') {
+      setErr('Bạn chưa nhập mật khẩu!');
+      setVisible(true);
+      return;
+    }
+
+    if (password.length < 10) {
+      setErr('Mật khẩu có ít nhất 10 ký tự!');
+      setVisible(true);
+      return;
+    }
+
+    if (password !== rePassword) {
+      setErr('Mật khẩu nhập lại không khớp với mật khẩu!');
+      setVisible(true);
+      return;
+    }
+
+    const data = await UserAPI.signup(fullName, phoneNumber, password);
+    if (data) {
+      dispatch(signup(data));
+      setFullName('');
+      setPhoneNumber('');
+      setPassword('');
+      setRePassword('');
+      navigation.navigate('Main');
+    } else {
+      setErr('Số điện thoại đã tồn tại!');
+      setVisible(true);
+    }
   };
 
   return (
@@ -32,6 +93,8 @@ const Signup = ({ navigation }) => {
           fontSize: 16,
           marginTop: 20,
         }}
+        value={fullName}
+        onChangeText={(text) => setFullName(text)}
       />
       <TextInput
         placeholder="Số điện thoại"
@@ -44,6 +107,8 @@ const Signup = ({ navigation }) => {
           fontSize: 16,
           marginTop: 20,
         }}
+        value={phoneNumber}
+        onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
         placeholder="Mật khẩu"
@@ -57,6 +122,8 @@ const Signup = ({ navigation }) => {
           fontSize: 16,
           marginTop: 20,
         }}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
       />
       <TextInput
         placeholder="Nhập lại mật khẩu"
@@ -70,6 +137,8 @@ const Signup = ({ navigation }) => {
           fontSize: 16,
           marginTop: 20,
         }}
+        value={rePassword}
+        onChangeText={(text) => setRePassword(text)}
       />
       <View style={{ display: 'flex', alignItems: 'center' }}>
         <Pressable
@@ -89,6 +158,18 @@ const Signup = ({ navigation }) => {
           </Text>
         </Pressable>
       </View>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        action={{
+          label: 'OK',
+          onPress: () => {
+            setVisible(false);
+          },
+        }}
+      >
+        {err}
+      </Snackbar>
     </SafeAreaView>
   );
 };
