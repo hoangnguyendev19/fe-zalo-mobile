@@ -19,25 +19,19 @@ const getAllConversationForUser = async (token) => {
 
 const createConversation = async (conversation, token) => {
   try {
-    const res = await axiosInstance.post('/', conversation, {
+    const { data } = await axiosInstance.post('/', conversation, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!res.ok) {
-      throw new Error('Create conversation failed');
-    }
-
-    const data = await res.json();
-
     return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 const removeUserForConversation = async (userId, conversationId, token) => {
   try {
-    const res = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/${conversationId}/remove-user`,
       { userId },
       {
@@ -45,21 +39,15 @@ const removeUserForConversation = async (userId, conversationId, token) => {
       },
     );
 
-    if (!res.ok) {
-      throw new Error('Remove user for this conversation failed');
-    }
-
-    const data = await res.json();
-
-    return data;
+    return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 const addUserForConversation = async (userId, conversationId, token) => {
   try {
-    const res = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/${conversationId}/add-user`,
       { userId },
       {
@@ -67,21 +55,15 @@ const addUserForConversation = async (userId, conversationId, token) => {
       },
     );
 
-    if (!res.ok) {
-      throw new Error('Add user for this conversation failed');
-    }
-
-    const data = await res.json();
-
-    return data;
+    return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 const removeYourselfForConversation = async (conversationId, token) => {
   try {
-    const res = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/${conversationId}/remove-yourself`,
       {},
       {
@@ -89,21 +71,15 @@ const removeYourselfForConversation = async (conversationId, token) => {
       },
     );
 
-    if (!res.ok) {
-      throw new Error('Remove yourself for this conversation failed');
-    }
-
-    const data = await res.json();
-
-    return data;
+    return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 const assignAdminForConversation = async (userId, conversationId, token) => {
   try {
-    const res = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/${conversationId}/assign-admin`,
       { userId },
       {
@@ -111,33 +87,21 @@ const assignAdminForConversation = async (userId, conversationId, token) => {
       },
     );
 
-    if (!res.ok) {
-      throw new Error('Assign admin for this conversation failed');
-    }
-
-    const data = await res.json();
-
-    return data;
+    return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 const deleteConversation = async (conversationId, token) => {
   try {
-    const res = await axiosInstance.delete(`/${conversationId}`, {
+    const { data } = await axiosInstance.delete(`/${conversationId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!res.ok) {
-      throw new Error('Delete this conversation failed');
-    }
-
-    const data = await res.json();
-
-    return data;
+    return data.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 

@@ -116,7 +116,6 @@ const AddFriend = ({ navigation }) => {
         </Pressable>
       </View>
       {friend && (
-        // <View style={{ flexDirection: 'row' }}>
         <View
           style={{
             flex: 1,
@@ -207,16 +206,15 @@ const AddFriend = ({ navigation }) => {
 
           {status === 'friend' && (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Pressable style={{ marginRight: 25 }}>
+                <Feather name="message-circle" size={24} color="black" />
+              </Pressable>
               <Pressable>
                 <Feather name="phone" size={24} color="black" />
-              </Pressable>
-              <Pressable style={{ marginLeft: 25 }}>
-                <Feather name="video" size={24} color="black" />
               </Pressable>
             </View>
           )}
         </View>
-        // </View>
       )}
       <Snackbar
         visible={visible}
