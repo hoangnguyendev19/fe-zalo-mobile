@@ -15,7 +15,6 @@ const Profile = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);
 
   const handleLogout = async () => {
-    console.log('logout');
     await UserAPI.logout();
     navigation.navigate('Start');
     dispatch(logout());

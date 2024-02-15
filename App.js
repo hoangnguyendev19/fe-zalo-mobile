@@ -16,6 +16,7 @@ import InforProfile from './screens/InforProfile';
 import CreateGroup from './screens/CreateGroup';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import RequestFriend from './screens/RequestFriend';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,16 @@ export default function App() {
                   headerTitleStyle: { fontSize: 16 },
                 }}
                 component={CreateGroup}
+              />
+              <Stack.Screen
+                name="RequestFriend"
+                options={{
+                  title: 'Lời mời kết bạn',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={RequestFriend}
               />
               <Stack.Screen
                 name="InforProfile"

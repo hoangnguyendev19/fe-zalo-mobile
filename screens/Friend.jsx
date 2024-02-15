@@ -16,6 +16,7 @@ const Friend = ({ navigation }) => {
           paddingVertical: 10,
           backgroundColor: '#fff',
         }}
+        onPress={() => navigation.navigate('RequestFriend')}
       >
         <FontAwesome5 name="users" size={24} color="#0091ff" />
         <Text style={{ marginLeft: 10, color: '#0091ff', fontSize: 16 }}>Lời mời kết bạn</Text>
