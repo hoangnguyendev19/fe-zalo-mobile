@@ -12,12 +12,12 @@ const ContactCover = ({ navigation, friend }) => {
   const dispatch = useDispatch();
 
   const handleCreateConversation = async () => {
-    const flag = conversations?.filter((conver) =>
-      conver.members.find((member) => member.id === id),
+    const flag = conversations?.filter(
+      (conver) => conver.members.find((member) => member.id === id) && conver.type === 'FRIEND',
     );
 
     if (flag.length > 0) {
-      navigation.navigate('Chat');
+      navigation.navigate('Chat', { conversationId: flag[0].id, name: fullName });
       return;
     }
 
@@ -30,7 +30,7 @@ const ContactCover = ({ navigation, friend }) => {
     const data = await ConversationAPI.createConversation(conversation, accessToken);
     if (data) {
       dispatch(createConversation(data));
-      navigation.navigate('Chat');
+      navigation.navigate('Chat', { conversationId: data.conversationId, name: fullName });
     }
   };
   return (

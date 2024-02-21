@@ -1,5 +1,5 @@
-import { ImageBackground, Text, View } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { ImageBackground, Pressable, Text, View } from 'react-native';
+import { Avatar, Snackbar } from 'react-native-paper';
 
 import background from '../assets/images/img-banner-1.png';
 import avt from '../assets/images/img-user.png';
@@ -7,20 +7,49 @@ import LineInfor from '../components/LineInfor';
 import { useEffect, useState } from 'react';
 import UserAPI from '../api/UserAPI';
 import { convertToDate } from '../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../redux/userSlice';
+import { Entypo } from '@expo/vector-icons';
 
-const InforProfile = ({ route }) => {
+const InforProfile = ({ route, navigation }) => {
   const { userId } = route.params;
-  const [user, setUser] = useState({});
+  const [currUser, setCurrUser] = useState({});
+  const { user, accessToken } = useSelector((state) => state.user);
+  const [delFriend, setDelFriend] = useState(false);
+
+  const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
+  const [err, setErr] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await UserAPI.getUserById(userId);
       if (data) {
-        setUser(data);
+        setCurrUser(data);
       }
     };
     fetchData();
   }, [userId]);
+
+  useEffect(() => {
+    if (user && currUser) {
+      const flag = user.friendList.filter((friend) => friend.id === currUser.id);
+      if (flag.length > 0) {
+        setDelFriend(true);
+      }
+    }
+  }, [user, currUser]);
+
+  const handleDeleteFriend = async () => {
+    const data = await UserAPI.deleteFriend(currUser.id, accessToken);
+    if (data) {
+      dispatch(setUser(data));
+      navigation.navigate('Main');
+    } else {
+      setErr('Xoá bạn bè thất bại!');
+      setVisible(true);
+    }
+  };
 
   const itemsInfor = [
     {
@@ -30,6 +59,18 @@ const InforProfile = ({ route }) => {
     {
       title: <Text style={{ fontWeight: 500 }}>Ngày sinh</Text>,
       content: <Text>{convertToDate(user?.dateOfBirth)}</Text>,
+    },
+  ];
+
+  const itemsChange = [
+    {
+      title: (
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+          <Entypo name="remove-user" size={20} color="red" />
+        </View>
+      ),
+      content: <Text style={{ color: 'red' }}>Xoá bạn bè</Text>,
+      action: handleDeleteFriend,
     },
   ];
 
@@ -46,10 +87,10 @@ const InforProfile = ({ route }) => {
             alignItems: 'flex-end',
           }}
         >
-          {user?.avatar ? (
+          {currUser?.avatar ? (
             <Avatar.Image
               size={80}
-              source={user?.avatar}
+              source={currUser?.avatar}
               style={{
                 position: 'absolute',
                 bottom: -30,
@@ -60,7 +101,7 @@ const InforProfile = ({ route }) => {
           ) : (
             <Avatar.Text
               size={80}
-              label={user?.fullName?.slice(0, 1)}
+              label={currUser?.fullName?.slice(0, 1)}
               style={{
                 position: 'absolute',
                 bottom: -30,
@@ -72,14 +113,32 @@ const InforProfile = ({ route }) => {
         </ImageBackground>
         <View style={{ marginTop: 40, marginHorizontal: 8 }}>
           <View style={{ marginBottom: 6, flexDirection: 'row', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: 500 }}>{user?.fullName}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 500 }}>{currUser?.fullName}</Text>
           </View>
 
           {itemsInfor.map((item, index) => {
             return <LineInfor key={index} item={item} />;
           })}
         </View>
+        {delFriend &&
+          itemsChange.map((item, index) => (
+            <Pressable key={index} onPress={item.action}>
+              <LineInfor item={item} />
+            </Pressable>
+          ))}
       </View>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        action={{
+          label: 'OK',
+          onPress: () => {
+            setVisible(false);
+          },
+        }}
+      >
+        {err}
+      </Snackbar>
     </View>
   );
 };
