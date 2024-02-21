@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.8:5000/api/v1/uploads',
+  baseURL: 'http://192.168.1.7:5000/api/v1/uploads',
   headers: { 'Content-Type': 'multipart/form-data' },
 });
 

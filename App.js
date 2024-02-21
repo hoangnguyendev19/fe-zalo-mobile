@@ -18,6 +18,10 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import RequestFriend from './screens/RequestFriend';
 
+
+import { useNavigation } from '@react-navigation/native';
+import RightHeader from './components/RightHeader';
+import RightOfChat from './screens/RightOfChat';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -37,32 +41,22 @@ export default function App() {
                   headerTitleStyle: { fontSize: 16 },
                   headerRight: () => {
                     return (
-                      <View style={{ flexDirection: 'row' }}>
-                        <Pressable>
-                          <Feather name="phone" size={24} color="white" />
-                        </Pressable>
-                        <Pressable>
-                          <Feather
-                            name="video"
-                            size={24}
-                            color="white"
-                            style={{ marginLeft: 20 }}
-                          />
-                        </Pressable>
-                        <Pressable>
-                          <AntDesign
-                            name="bars"
-                            size={24}
-                            color="white"
-                            style={{ marginLeft: 20 }}
-                          />
-                        </Pressable>
-                      </View>
+                        <RightHeader/>
                     );
                   },
                 }}
                 name="Chat"
                 component={Chat}
+              />
+              <Stack.Screen
+                name="RightOfChat"
+                options={{
+                  title: 'Tùy Chọn',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={RightOfChat}
               />
               <Stack.Screen
                 name="AddFriend"
