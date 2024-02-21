@@ -22,6 +22,8 @@ import RequestFriend from './screens/RequestFriend';
 import { useNavigation } from '@react-navigation/native';
 import RightHeader from './components/RightHeader';
 import RightOfChat from './screens/RightOfChat';
+import ChangeInforProfile from './screens/ChangeInforProfile';
+import ChangePassword from './screens/ChangePassword';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -57,6 +59,26 @@ export default function App() {
                   headerTitleStyle: { fontSize: 16 },
                 }}
                 component={RightOfChat}
+              />
+              <Stack.Screen
+                name="ChangeInforProfile"
+                options={{
+                  title: 'Đổi thông tin',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={ChangeInforProfile}
+              />
+              <Stack.Screen
+                name="ChangePassword"
+                options={{
+                  title: 'Đổi mật khẩu',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={ChangePassword}
               />
               <Stack.Screen
                 name="AddFriend"
