@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.9:5000/api/v1/conversations',
+  baseURL: 'http://192.168.1.8:5000/api/v1/conversations',
   headers: { 'Content-Type': 'application/json' },
 });
 

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../redux/userSlice';
 import UserAPI from '../api/UserAPI';
 import { Snackbar } from 'react-native-paper';
+import { io } from 'socket.io-client';
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('0123456789');
@@ -42,6 +43,8 @@ const Login = ({ navigation }) => {
     const data = await UserAPI.login(phoneNumber, password);
 
     if (data) {
+      const socket = io('http://192.168.1.8:5000');
+      socket.emit('login', data.user.id);
       dispatch(login(data));
       setPhoneNumber('');
       setPassword('');

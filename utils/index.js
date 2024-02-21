@@ -1,10 +1,30 @@
+import moment from 'moment';
+
 export const convertToDate = (dob) => {
-  const date = new Date(dob);
-  return (
-    (date.getDate() > 9 ? date.getDate() : '0' + date.getDate()) +
-    '/' +
-    (date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) +
-    '/' +
-    date.getFullYear()
-  );
+  const formattedDate = moment(dob).format('DD/MM/YYYY');
+  return formattedDate;
+};
+
+export const convertToTime = (date) => {
+  const now = moment();
+  const then = moment(date);
+
+  const secondsDiff = now.diff(then, 'seconds');
+
+  if (secondsDiff <= 0) {
+    return 'Vừa gửi';
+  }
+
+  if (secondsDiff < 60) {
+    return secondsDiff + ' giây trước';
+  } else if (secondsDiff < 3600) {
+    const minutesDiff = now.diff(then, 'minutes');
+    return minutesDiff + ' phút trước';
+  } else if (secondsDiff < 86400) {
+    const hoursDiff = now.diff(then, 'hours');
+    return hoursDiff + ' giờ trước';
+  } else {
+    const daysDiff = now.diff(then, 'days');
+    return daysDiff + ' ngày trước';
+  }
 };
