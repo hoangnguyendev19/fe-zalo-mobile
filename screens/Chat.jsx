@@ -39,7 +39,7 @@ const Chat = ({ navigation, route }) => {
   }, [navigation, conversationId, accessToken]);
 
   useEffect(() => {
-    const newSocket = io('http://192.168.1.8:5000');
+    const newSocket = io('http://192.168.1.7:5000');
     newSocket.emit('join_room', { conversationId, userId: user.id });
     setSocket(newSocket);
 
@@ -212,6 +212,7 @@ const Chat = ({ navigation, route }) => {
         width: '100%',
       }}
     >
+    
       <ScrollView style={{ paddingTop: 10, backgroundColor: 'rgba(0,0,0,0.1)' }}>
         {messages.length > 0 &&
           messages.map((message) => {

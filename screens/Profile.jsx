@@ -21,11 +21,11 @@ const Profile = ({ navigation }) => {
   };
 
   const handleUpdatePwd = () => {
-    console.log('Update password');
+    navigation.navigate('ChangePassword');
   };
 
   const handleUpdateInfor = () => {
-    console.log('Update infor');
+    navigation.navigate('ChangeInforProfile');
   };
 
   const itemsInfor = [
