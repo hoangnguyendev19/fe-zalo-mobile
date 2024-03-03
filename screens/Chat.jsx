@@ -15,7 +15,7 @@ const Chat = ({ navigation, route }) => {
   const [content, setContent] = useState('');
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [type, setType] = useState('TEXT'); // TEXT - IMAGE - FILE
+  const [type, setType] = useState('TEXT'); // TEXT - IMAGE - FILE - VIDEO
 
   const { conversationId, name } = route.params;
   const { user, accessToken } = useSelector((state) => state.user);
@@ -39,7 +39,7 @@ const Chat = ({ navigation, route }) => {
   }, [navigation, conversationId, accessToken]);
 
   useEffect(() => {
-    const newSocket = io('http://192.168.1.5:5000');
+    const newSocket = io(`${process.env.EXPO_PUBLIC_API_URL}`);
     newSocket.emit('join_room', { conversationId, userId: user.id });
     setSocket(newSocket);
 
