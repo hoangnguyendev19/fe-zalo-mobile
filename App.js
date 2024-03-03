@@ -8,22 +8,19 @@ import Main from './screens/Main';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PaperProvider } from 'react-native-paper';
 import Chat from './screens/Chat';
-import { Pressable, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import AddFriend from './screens/AddFriend';
 import InforProfile from './screens/InforProfile';
 import CreateGroup from './screens/CreateGroup';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import RequestFriend from './screens/RequestFriend';
-
-
-import { useNavigation } from '@react-navigation/native';
 import RightHeader from './components/RightHeader';
-import RightOfChat from './screens/RightOfChat';
-import ChangeInforProfile from './screens/ChangeInforProfile';
+import ChatOption from './screens/ChatOption';
+import ChangeProfile from './screens/ChangeProfile';
 import ChangePassword from './screens/ChangePassword';
+import GroupMember from './screens/GroupMember';
+import AddMember from './screens/AddMember';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -42,33 +39,51 @@ export default function App() {
                   headerTintColor: '#fff',
                   headerTitleStyle: { fontSize: 16 },
                   headerRight: () => {
-                    return (
-                        <RightHeader/>
-                    );
+                    return <RightHeader />;
                   },
                 }}
                 name="Chat"
                 component={Chat}
               />
               <Stack.Screen
-                name="RightOfChat"
+                name="ChatOption"
                 options={{
                   title: 'Tùy Chọn',
                   headerStyle: { backgroundColor: '#0091ff' },
                   headerTintColor: '#fff',
                   headerTitleStyle: { fontSize: 16 },
                 }}
-                component={RightOfChat}
+                component={ChatOption}
               />
               <Stack.Screen
-                name="ChangeInforProfile"
+                name="GroupMember"
+                options={{
+                  title: 'Thành viên nhóm',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={GroupMember}
+              />
+              <Stack.Screen
+                name="AddMember"
+                options={{
+                  title: 'Thêm thành viên',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={AddMember}
+              />
+              <Stack.Screen
+                name="ChangeProfile"
                 options={{
                   title: 'Đổi thông tin',
                   headerStyle: { backgroundColor: '#0091ff' },
                   headerTintColor: '#fff',
                   headerTitleStyle: { fontSize: 16 },
                 }}
-                component={ChangeInforProfile}
+                component={ChangeProfile}
               />
               <Stack.Screen
                 name="ChangePassword"

@@ -9,7 +9,7 @@ import UserAPI from '../api/UserAPI';
 import { convertToDate } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../redux/userSlice';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, AntDesign } from '@expo/vector-icons';
 
 const InforProfile = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -90,7 +90,7 @@ const InforProfile = ({ route, navigation }) => {
           {currUser?.avatar ? (
             <Avatar.Image
               size={80}
-              source={currUser?.avatar}
+              source={{ uri: currUser?.avatar }}
               style={{
                 position: 'absolute',
                 bottom: -30,

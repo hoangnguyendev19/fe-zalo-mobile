@@ -48,7 +48,7 @@ const ContactCover = ({ navigation, friend }) => {
         onPress={() => navigation.navigate('InforProfile', { userId: id })}
       >
         {avatarUrl ? (
-          <Avatar.Image size={50} source={avatarUrl} />
+          <Avatar.Image size={50} source={{ uri: avatarUrl }} />
         ) : (
           <Avatar.Text size={50} label={fullName.slice(0, 1)} />
         )}

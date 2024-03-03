@@ -39,7 +39,7 @@ const Chat = ({ navigation, route }) => {
   }, [navigation, conversationId, accessToken]);
 
   useEffect(() => {
-    const newSocket = io('http://192.168.1.7:5000');
+    const newSocket = io('http://192.168.1.5:5000');
     newSocket.emit('join_room', { conversationId, userId: user.id });
     setSocket(newSocket);
 
@@ -53,7 +53,6 @@ const Chat = ({ navigation, route }) => {
   useEffect(() => {
     if (socket) {
       socket.on('receive_message', (message) => {
-        console.log(message);
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
@@ -175,7 +174,6 @@ const Chat = ({ navigation, route }) => {
         });
 
         const data = await UploadAPI.uploadFile(formData);
-        console.log(data);
         if (data) {
           const message = {
             content: data,
@@ -212,7 +210,6 @@ const Chat = ({ navigation, route }) => {
         width: '100%',
       }}
     >
-    
       <ScrollView style={{ paddingTop: 10, backgroundColor: 'rgba(0,0,0,0.1)' }}>
         {messages.length > 0 &&
           messages.map((message) => {

@@ -61,7 +61,7 @@ const MessageCover = ({ navigation, conver }) => {
           }}
         >
           {friend?.avatarUrl ? (
-            <Avatar.Image size={50} source={friend?.avatarUrl} />
+            <Avatar.Image size={50} source={{ uri: friend?.avatarUrl }} />
           ) : (
             <Avatar.Text size={50} label={friend?.fullName?.slice(0, 1)} />
           )}

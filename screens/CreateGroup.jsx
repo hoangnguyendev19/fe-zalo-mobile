@@ -66,7 +66,7 @@ const CreateGroup = ({ navigation }) => {
     const data = await ConversationAPI.createConversation(conversation, accessToken);
     if (data) {
       dispatch(createConversation(data));
-      navigation.navigate('Chat');
+      navigation.navigate('Chat', { conversationId: data.id, name: data.name });
     } else {
       setErr('Tạo nhóm thất bại!');
       setVisible(true);
@@ -108,11 +108,11 @@ const CreateGroup = ({ navigation }) => {
                 }}
               >
                 <Pressable
-                  style={{ flexDirection: 'row', alignItems: 'center', marginRight: 60 }}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginRight: 'auto' }}
                   onPress={() => handleCheckBox(friend.id)}
                 >
                   {friend.avatarUrl ? (
-                    <Avatar.Image size={50} source={friend.avatarUrl} />
+                    <Avatar.Image size={50} source={{ uri: friend.avatarUrl }} />
                   ) : (
                     <Avatar.Text size={50} label={friend.fullName.slice(0, 1)} />
                   )}
