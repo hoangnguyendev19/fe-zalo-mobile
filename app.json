@@ -21,10 +21,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.zalo.fezalomobile"
     },
-    "web": {
-    },
+    "web": {},
     "plugins": [
       [
         "expo-image-picker",

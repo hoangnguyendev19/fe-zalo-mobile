@@ -1,64 +1,71 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, Button, ScrollView, Pressable } from 'react-native';
+import { Snackbar } from 'react-native-paper';
+import UserAPI from '../api/UserAPI';
+import { useSelector } from 'react-redux';
 
-const ChangePassword = ({ item }) => {
+const ChangePassword = ({ navigation }) => {
+  const { accessToken } = useSelector((state) => state.user);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChangePassword = () => {
-    // Kiểm tra mật khẩu hiện tại
-    if (currentPassword !== 'password123') {
-      setErrorMessage('Mật khẩu hiện tại không đúng');
+  const [err, setErr] = useState('');
+  const [visible, setVisible] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setErr('Vui lòng nhập đầy đủ thông tin');
+      setVisible(true);
       return;
     }
 
-    // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+    if (currentPassword.length < 10 || newPassword.length < 10 || confirmPassword.length < 10) {
+      setErr('Mật khẩu phải có ít nhất 10 ký tự');
+      setVisible(true);
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
-      setErrorMessage('Mật khẩu mới và xác nhận mật khẩu không khớp');
+      setErr('Mật khẩu mới và nhập lại mật khẩu mới không khớp');
+      setVisible(true);
       return;
     }
 
-    // Thực hiện hành động thay đổi mật khẩu, ví dụ: gửi yêu cầu đến API
-
-    // Reset các trường nhập liệu và thông báo lỗi
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setErrorMessage('');
-    alert('Mật khẩu đã được thay đổi thành công!');
+    const data = await UserAPI.updatePassword(currentPassword, newPassword, accessToken);
+    if (data) {
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      navigation.navigate('Profile');
+    } else {
+      setErr('Mật khẩu hiện tại không đúng');
+      setVisible(true);
+    }
   };
 
   return (
-    <ScrollView contentContainerStyle={{
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      padding: 20,
-    }}>
-      <Text style={{
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-      }}>Thay đổi mật khẩu</Text>
-      {errorMessage ? <Text style={{
-        color: 'red',
-        marginBottom: 15,
-      }}>{errorMessage}</Text> : null}
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        alignItems: 'center',
+        padding: 15,
+      }}
+    >
       <TextInput
         style={{
           width: '100%',
           borderWidth: 1,
           borderColor: '#ccc',
           borderRadius: 5,
-          padding: 10,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
           marginBottom: 15,
         }}
         placeholder="Mật khẩu hiện tại"
         secureTextEntry={true}
         value={currentPassword}
-        onChangeText={setCurrentPassword}
+        onChangeText={(text) => setCurrentPassword(text)}
       />
       <TextInput
         style={{
@@ -66,13 +73,14 @@ const ChangePassword = ({ item }) => {
           borderWidth: 1,
           borderColor: '#ccc',
           borderRadius: 5,
-          padding: 10,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
           marginBottom: 15,
         }}
         placeholder="Mật khẩu mới"
         secureTextEntry={true}
         value={newPassword}
-        onChangeText={setNewPassword}
+        onChangeText={(text) => setNewPassword(text)}
       />
       <TextInput
         style={{
@@ -80,15 +88,41 @@ const ChangePassword = ({ item }) => {
           borderWidth: 1,
           borderColor: '#ccc',
           borderRadius: 5,
-          padding: 10,
-          marginBottom: 15,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+          marginBottom: 40,
         }}
-        placeholder="Xác nhận mật khẩu mới"
+        placeholder="Nhập lại mật khẩu mới"
         secureTextEntry={true}
         value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        onChangeText={(text) => setConfirmPassword(text)}
       />
-      <Button title="Thay đổi mật khẩu" onPress={handleChangePassword} />
+      <Pressable
+        style={{
+          width: '100%',
+          backgroundColor: '#0091ff',
+          padding: 10,
+          borderRadius: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: 15,
+        }}
+        onPress={handleChangePassword}
+      >
+        <Text style={{ color: '#fff', fontSize: 14, fontWeight: 'bold' }}>Thay đổi mật khẩu</Text>
+      </Pressable>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        action={{
+          label: 'OK',
+          onPress: () => {
+            setVisible(false);
+          },
+        }}
+      >
+        {err}
+      </Snackbar>
     </ScrollView>
   );
 };

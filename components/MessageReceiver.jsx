@@ -25,7 +25,7 @@ const MessageReceiver = ({ message, handleZoomImage, handleLikeMessage, handleUn
       }}
     >
       {senderId.avatarUrl ? (
-        <Avatar.Image size={30} source={senderId.avatarUrl} />
+        <Avatar.Image size={30} source={{ uri: senderId.avatarUrl }} />
       ) : (
         <Avatar.Text size={30} label={senderId.fullName.slice(0, 1)} />
       )}

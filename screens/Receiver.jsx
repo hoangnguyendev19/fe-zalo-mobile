@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import UserAPI from '../api/UserAPI';
 
-const Receiver = () => {
+const Receiver = ({ navigation }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
@@ -54,7 +54,7 @@ const Receiver = () => {
               onPress={() => navigation.navigate('InforProfile', { userId: friend.id })}
             >
               {friend.avatarUrl ? (
-                <Avatar.Image size={40} source={friend.avatarUrl} />
+                <Avatar.Image size={40} source={{ uri: friend.avatarUrl }} />
               ) : (
                 <Avatar.Text size={40} label={friend.fullName.slice(0, 1)} />
               )}

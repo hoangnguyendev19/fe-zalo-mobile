@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.7:5000/api/v1/users',
+  baseURL: 'http://192.168.1.5:5000/api/v1/users',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -48,7 +48,7 @@ const updatePassword = async (password, newPassword, token) => {
       { headers: { Authorization: `Bearer ${token}` } },
     );
 
-    return data.message;
+    return data;
   } catch (error) {
     console.log(error);
   }

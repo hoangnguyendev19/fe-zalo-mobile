@@ -24,8 +24,8 @@ const Profile = ({ navigation }) => {
     navigation.navigate('ChangePassword');
   };
 
-  const handleUpdateInfor = () => {
-    navigation.navigate('ChangeInforProfile');
+  const handleUpdateProfile = () => {
+    navigation.navigate('ChangeProfile');
   };
 
   const itemsInfor = [
@@ -46,7 +46,7 @@ const Profile = ({ navigation }) => {
         </View>
       ),
       content: <Text>Đổi thông tin</Text>,
-      action: handleUpdateInfor,
+      action: handleUpdateProfile,
     },
     {
       title: (
@@ -70,21 +70,22 @@ const Profile = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ height: undefined, backgroundColor: 'white', marginBottom: 3 }}>
+      <View style={{ height: undefined, backgroundColor: '#fff', marginBottom: 3 }}>
         <ImageBackground
-          source={background}
+          source={{ uri: user?.coverImage ? user?.coverImage : 'Not found' }}
           style={{
             width: '100%',
             height: 200,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'flex-end',
+            backgroundColor: 'rgba(0,0,0,0.1)',
           }}
         >
-          {user?.avatar ? (
+          {user?.avatarUrl ? (
             <Avatar.Image
               size={80}
-              source={user?.avatar}
+              source={{ uri: user?.avatarUrl }}
               style={{
                 position: 'absolute',
                 bottom: -30,
