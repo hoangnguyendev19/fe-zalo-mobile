@@ -9,7 +9,7 @@ import { Video, ResizeMode } from 'expo-av';
 const MessageReceiver = ({ message, handleZoomImage, handleLikeMessage, handleUnlikeMessage }) => {
   const { content, createdAt, updatedAt, senderId, type, isRevoked, likes, id } = message;
   const { user } = useSelector((state) => state.user);
-  const statusLike = likes && likes.includes(user.id);
+  const statusLike = likes && likes.includes(user?.id);
 
   const [status, setStatus] = useState({});
   const video = useRef(null);

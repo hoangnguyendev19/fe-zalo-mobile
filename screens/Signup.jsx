@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import UserAPI from '../api/UserAPI';
 import { signup } from '../redux/userSlice';
+import { io } from 'socket.io-client';
 
 const Signup = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -56,6 +57,8 @@ const Signup = ({ navigation }) => {
 
     const data = await UserAPI.signup(fullName, phoneNumber, password);
     if (data) {
+      const socket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
+      socket.emit('login', data.user.id);
       dispatch(signup(data));
       setFullName('');
       setPhoneNumber('');
