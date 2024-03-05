@@ -43,7 +43,7 @@ const Login = ({ navigation }) => {
     const data = await UserAPI.login(phoneNumber, password);
 
     if (data) {
-      const socket = io('http://192.168.1.8:5000');
+      const socket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
       socket.emit('login', data.user.id);
       dispatch(login(data));
       setPhoneNumber('');

@@ -39,7 +39,7 @@ const Chat = ({ navigation, route }) => {
   }, [navigation, conversationId, accessToken]);
 
   useEffect(() => {
-    const newSocket = io(`${process.env.EXPO_PUBLIC_API_URL}`);
+    const newSocket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
     newSocket.emit('join_room', { conversationId, userId: user.id });
     setSocket(newSocket);
 
