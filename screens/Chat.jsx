@@ -169,11 +169,12 @@ const Chat = ({ navigation, route }) => {
         const formData = new FormData();
         formData.append('file', {
           uri: result.assets[0].uri,
-          name: 'file',
+          name: result.assets[0].type === 'image' ? 'image' : 'video',
           type: result.assets[0].mimeType,
         });
 
         const data = await UploadAPI.uploadFile(formData);
+
         if (data) {
           const message = {
             content: data,
@@ -195,8 +196,25 @@ const Chat = ({ navigation, route }) => {
     try {
       let result = await DocumentPicker.getDocumentAsync();
       if (!result.canceled) {
-        setType('FILE');
-        setContent(result.assets[0].uri);
+        const formData = new FormData();
+        formData.append('file', {
+          uri: result.assets[0].uri,
+          name: result.assets[0].name,
+          type: result.assets[0].mimeType,
+        });
+
+        const data = await UploadAPI.uploadFile(formData);
+        if (data) {
+          const message = {
+            content: data,
+            type: 'FILE',
+            conversationId,
+            senderId: user.id,
+          };
+          if (socket) {
+            socket.emit('send_message', message);
+          }
+        }
       }
     } catch (error) {
       console.log('Error: ', error.message);

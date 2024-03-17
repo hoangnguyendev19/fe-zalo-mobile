@@ -56,7 +56,24 @@ const MessageReceiver = ({ message, handleZoomImage, handleLikeMessage, handleUn
           }}
         >
           {type === 'TEXT' && <Text>{content}</Text>}
-          {type === 'FILE' && <Text>{content}</Text>}
+          {type === 'FILE' && (
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                padding: 10,
+                borderRadius: 10,
+              }}
+              // onPress={() => {
+              //   console.log('Press');
+              // }}
+            >
+              {content.includes('pdf') && <AntDesign name="pdffile1" size={40} color="black" />}
+              {content.includes('docx') && <AntDesign name="wordfile1" size={40} color="black" />}
+              <Text style={{ marginLeft: 5, color: 'black' }}>{content.split('/').pop()}</Text>
+            </Pressable>
+          )}
           {type === 'VIDEO' && (
             <View>
               <Video
