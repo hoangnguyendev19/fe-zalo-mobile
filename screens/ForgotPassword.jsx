@@ -1,7 +1,8 @@
-import { Text, View, TextInput, Pressable } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { useState } from 'react';
-import { Snackbar } from 'react-native-paper';
+import { Snackbar, TextInput } from 'react-native-paper';
 import UserAPI from '../api/UserAPI';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -33,22 +34,25 @@ const ForgotPassword = ({ navigation }) => {
   };
 
   return (
-    <View style={{ width: '100%', flex: 1 }}>
+    <SafeAreaView style={{ width: '100%', flex: 1 }}>
       <View
-        style={{ paddingVertical: 10, paddingHorizontal: 10, backgroundColor: 'rgba(0,0,0,0.1)' }}
-      >
-        <Text style={{ fontSize: 15 }}>Nhập email để lấy lại mật khẩu</Text>
-      </View>
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="rgba(0,0,0,0.5)"
         style={{
           paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
+          paddingHorizontal: 10,
+          backgroundColor: 'rgba(0,0,0,0.1)',
+          marginTop: -30,
+        }}
+      >
+        <Text style={{ fontSize: 12 }}>Nhập email để lấy lại mật khẩu</Text>
+      </View>
+      <TextInput
+        label="Email"
+        style={{
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 30,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -84,7 +88,7 @@ const ForgotPassword = ({ navigation }) => {
       >
         {err}
       </Snackbar>
-    </View>
+    </SafeAreaView>
   );
 };
 

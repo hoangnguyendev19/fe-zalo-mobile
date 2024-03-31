@@ -20,6 +20,7 @@ import ChangeProfile from './screens/ChangeProfile';
 import ChangePassword from './screens/ChangePassword';
 import GroupMember from './screens/GroupMember';
 import AddMember from './screens/AddMember';
+import Otp from './screens/Otp';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +30,7 @@ export default function App() {
       <SafeAreaProvider>
         <PaperProvider>
           <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator initialRouteName="Start">
               <Stack.Screen options={{ headerShown: false }} name="Start" component={Start} />
               <Stack.Screen options={{ headerShown: false }} name="Main" component={Main} />
               <Stack.Screen
@@ -144,6 +145,16 @@ export default function App() {
                   headerTitleStyle: { fontSize: 16 },
                 }}
                 component={Signup}
+              />
+              <Stack.Screen
+                name="Otp"
+                options={{
+                  title: 'Xác thực OTP',
+                  headerStyle: { backgroundColor: '#0091ff' },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: { fontSize: 16 },
+                }}
+                component={Otp}
               />
               <Stack.Screen
                 name="Login"

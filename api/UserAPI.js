@@ -1,18 +1,34 @@
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { axiosAuth, axiosNotAuth } from '../utils/axiosConfig';
+import TokenAPI from './TokenAPI';
 
-const axiosInstance = axios.create({
-  baseURL: `${process.env.EXPO_PUBLIC_API_URL}/users`,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-const signup = async (fullName, phoneNumber, password) => {
+const signup = async (email, phoneNumber) => {
   try {
-    const { data } = await axiosInstance.post('/signup', { fullName, phoneNumber, password });
+    const { data } = await axiosNotAuth.post('/api/v1/users/signup', {
+      email,
+      phoneNumber,
+    });
 
-    if (data.data) {
-      await AsyncStorage.setItem('access_token', JSON.stringify(data.data.accessToken));
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const verifyOtp = async (fullName, email, phoneNumber, password, otp) => {
+  try {
+    const { data } = await axiosNotAuth.post('/api/v1/users/verify-otp', {
+      fullName,
+      email,
+      phoneNumber,
+      password,
+      otp,
+    });
+
+    if (data.status === 'success') {
+      await TokenAPI.setAccessToken(data.data.accessToken);
+      await TokenAPI.setRefreshToken(data.data.refreshToken);
     }
+
     return data.data;
   } catch (error) {
     console.log(error);
@@ -21,11 +37,13 @@ const signup = async (fullName, phoneNumber, password) => {
 
 const login = async (phoneNumber, password) => {
   try {
-    const { data } = await axiosInstance.post('/login', { phoneNumber, password });
+    const { data } = await axiosNotAuth.post('/api/v1/users/login', { phoneNumber, password });
 
-    if (data.data) {
-      await AsyncStorage.setItem('access_token', JSON.stringify(data.data.accessToken));
+    if (data.status === 'success') {
+      await TokenAPI.setAccessToken(data.data.accessToken);
+      await TokenAPI.setRefreshToken(data.data.refreshToken);
     }
+
     return data.data;
   } catch (error) {
     console.log(error);
@@ -34,19 +52,21 @@ const login = async (phoneNumber, password) => {
 
 const logout = async () => {
   try {
-    await AsyncStorage.removeItem('access_token');
+    const { data } = await axiosAuth.delete('/api/v1/users/logout');
+    if (data.status === 'success') {
+      await TokenAPI.removeTokens();
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
-const updatePassword = async (password, newPassword, token) => {
+const updatePassword = async (password, newPassword) => {
   try {
-    const { data } = await axiosInstance.put(
-      '/update-password',
-      { password, newPassword },
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put('/api/v1/users/update-password', {
+      password,
+      newPassword,
+    });
 
     return data;
   } catch (error) {
@@ -56,7 +76,7 @@ const updatePassword = async (password, newPassword, token) => {
 
 const forgotPassword = async (email) => {
   try {
-    const { data } = await axiosInstance.post('/forgot-password', { email });
+    const { data } = await axiosNotAuth.post('/api/v1/users/forgot-password', { email });
 
     return data;
   } catch (error) {
@@ -66,7 +86,7 @@ const forgotPassword = async (email) => {
 
 const getUserById = async (userId) => {
   try {
-    const { data } = await axiosInstance.get(`/${userId}`);
+    const { data } = await axiosNotAuth.get(`/api/v1/users/${userId}`);
 
     return data.data;
   } catch (error) {
@@ -76,7 +96,7 @@ const getUserById = async (userId) => {
 
 const getUserByPhoneNumber = async (phoneNumber) => {
   try {
-    const { data } = await axiosInstance.get(`?phoneNumber=${phoneNumber}`);
+    const { data } = await axiosNotAuth.get(`/api/v1/users?phoneNumber=${phoneNumber}`);
 
     return data.data;
   } catch (error) {
@@ -84,11 +104,9 @@ const getUserByPhoneNumber = async (phoneNumber) => {
   }
 };
 
-const getMe = async (token) => {
+const getMe = async () => {
   try {
-    const { data } = await axiosInstance.get('/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axiosAuth.get('/api/v1/users/me');
 
     return data.data;
   } catch (error) {
@@ -96,11 +114,9 @@ const getMe = async (token) => {
   }
 };
 
-const updateMe = async (user, token) => {
+const updateMe = async (user) => {
   try {
-    const { data } = await axiosInstance.put('/me', user, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axiosAuth.put('/api/v1/users/me', user);
 
     return data.data;
   } catch (error) {
@@ -108,13 +124,9 @@ const updateMe = async (user, token) => {
   }
 };
 
-const requestFriend = async (userId, token) => {
+const requestFriend = async (userId) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/request-friend/${userId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put(`/api/v1/users/request-friend/${userId}`, {});
 
     return data.data;
   } catch (error) {
@@ -122,13 +134,9 @@ const requestFriend = async (userId, token) => {
   }
 };
 
-const acceptFriend = async (userId, token) => {
+const acceptFriend = async (userId) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/accept-friend/${userId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put(`/api/v1/users/accept-friend/${userId}`, {});
 
     return data.data;
   } catch (error) {
@@ -136,13 +144,9 @@ const acceptFriend = async (userId, token) => {
   }
 };
 
-const deleteAcceptFriend = async (userId, token) => {
+const deleteAcceptFriend = async (userId) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/delete-accept-friend/${userId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put(`/api/v1/users/delete-accept-friend/${userId}`, {});
 
     return data.data;
   } catch (error) {
@@ -150,13 +154,9 @@ const deleteAcceptFriend = async (userId, token) => {
   }
 };
 
-const revokeFriend = async (userId, token) => {
+const revokeFriend = async (userId) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/revoke-friend/${userId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put(`/api/v1/users/revoke-friend/${userId}`, {});
 
     return data.data;
   } catch (error) {
@@ -164,13 +164,9 @@ const revokeFriend = async (userId, token) => {
   }
 };
 
-const deleteFriend = async (userId, token) => {
+const deleteFriend = async (userId) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/delete-friend/${userId}`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const { data } = await axiosAuth.put(`/api/v1/users/delete-friend/${userId}`, {});
 
     return data.data;
   } catch (error) {
@@ -180,6 +176,7 @@ const deleteFriend = async (userId, token) => {
 
 const UserAPI = {
   signup,
+  verifyOtp,
   login,
   logout,
   updatePassword,

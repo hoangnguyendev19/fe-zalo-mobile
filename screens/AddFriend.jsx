@@ -15,7 +15,7 @@ const AddFriend = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
   const [status, setStatus] = useState('request'); // request - revoke - accept - friend
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (user && friend) {
@@ -47,7 +47,7 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleRequestFriend = async () => {
-    const data = await UserAPI.requestFriend(friend.id, accessToken);
+    const data = await UserAPI.requestFriend(friend.id);
     if (data) {
       dispatch(setUser(data));
       setStatus('revoke');
@@ -58,7 +58,7 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleRevokeFriend = async () => {
-    const data = await UserAPI.revokeFriend(friend.id, accessToken);
+    const data = await UserAPI.revokeFriend(friend.id);
     if (data) {
       dispatch(setUser(data));
       setStatus('request');
@@ -69,7 +69,7 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleAcceptFriend = async () => {
-    const data = await UserAPI.acceptFriend(friend.id, accessToken);
+    const data = await UserAPI.acceptFriend(friend.id);
     if (data) {
       dispatch(setUser(data));
       setStatus('friend');
@@ -80,7 +80,7 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleDeleteAcceptFriend = async () => {
-    const data = await UserAPI.deleteAcceptFriend(friend.id, accessToken);
+    const data = await UserAPI.deleteAcceptFriend(friend.id);
     if (data) {
       dispatch(setUser(data));
       setStatus('request');

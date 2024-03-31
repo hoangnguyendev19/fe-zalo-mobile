@@ -7,7 +7,7 @@ import { createConversation } from '../redux/conversationSlice';
 
 const ContactCover = ({ navigation, friend }) => {
   const { fullName, avatarUrl, id } = friend;
-  const { accessToken, user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { conversations } = useSelector((state) => state.conversation);
   const dispatch = useDispatch();
 
@@ -27,7 +27,7 @@ const ContactCover = ({ navigation, friend }) => {
       members: [user.id, id],
     };
 
-    const data = await ConversationAPI.createConversation(conversation, accessToken);
+    const data = await ConversationAPI.createConversation(conversation);
     if (data) {
       dispatch(createConversation(data));
       navigation.navigate('Chat', { conversationId: data.conversationId, name: fullName });

@@ -16,7 +16,6 @@ const Tab = createBottomTabNavigator();
 
 const Main = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state) => state.user);
 
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
@@ -24,14 +23,14 @@ const Main = ({ navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await ConversationAPI.getAllConversationForUser(accessToken);
+      const data = await ConversationAPI.getAllConversationForUser();
       if (data) {
         dispatch(getAllConversations(data));
       }
     };
 
     fetchData();
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 
   const handleAddFriend = () => {
     closeMenu();

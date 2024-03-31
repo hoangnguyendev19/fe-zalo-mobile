@@ -1,17 +1,19 @@
 import { Link } from '@react-navigation/native';
-import { Text, View, TextInput, Pressable } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/userSlice';
 import UserAPI from '../api/UserAPI';
-import { Snackbar } from 'react-native-paper';
+import { Snackbar, TextInput } from 'react-native-paper';
 import { io } from 'socket.io-client';
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('0123456789');
   const [password, setPassword] = useState('huynguyen@123');
   const dispatch = useDispatch();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
@@ -68,31 +70,33 @@ const Login = ({ navigation }) => {
         <Text style={{ fontSize: 12 }}>Vui lòng nhập số điện thoại và mật khẩu để đăng nhập</Text>
       </View>
       <TextInput
-        placeholder="Số điện thoại"
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Số điện thoại"
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 30,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
-        placeholder="Mật khẩu"
-        secureTextEntry={true}
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Mật khẩu"
+        secureTextEntry={!showPassword}
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
+        right={
+          <TextInput.Icon
+            icon={showPassword ? 'eye-off' : 'eye'}
+            onPress={() => setShowPassword(!showPassword)}
+          />
+        }
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
