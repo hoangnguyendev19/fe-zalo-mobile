@@ -60,6 +60,10 @@ const InforProfile = ({ route, navigation }) => {
       title: <Text style={{ fontWeight: 500 }}>Ngày sinh</Text>,
       content: <Text>{convertToDate(user?.dateOfBirth)}</Text>,
     },
+    {
+      title: <Text style={{ fontWeight: 500 }}>Email</Text>,
+      content: <Text>{user?.email}</Text>,
+    },
   ];
 
   const itemsChange = [
