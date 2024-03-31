@@ -1,8 +1,16 @@
 import { Image, Pressable, Text, TextBase, View } from 'react-native';
 import Logo from '../assets/images/logo.png';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TokenAPI from '../api/TokenAPI';
+import { useEffect } from 'react';
 
 const Start = ({ navigation }) => {
+  useEffect(() => {
+    if (TokenAPI.getAccessToken() && TokenAPI.getRefreshToken()) {
+      navigation.navigate('Main');
+    }
+  }, []);
+
   return (
     <SafeAreaView style={{ width: '100%', alignItems: 'center', flex: 1 }}>
       <View style={{ marginTop: 100 }}>

@@ -11,6 +11,8 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
 import { getAllConversations } from '../redux/conversationSlice';
+import UserAPI from '../api/UserAPI';
+import { setUser } from '../redux/userSlice';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,6 +22,17 @@ const Main = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await UserAPI.getMe();
+      if (data) {
+        dispatch(setUser(data));
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchData = async () => {
