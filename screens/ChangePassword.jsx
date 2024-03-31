@@ -5,7 +5,6 @@ import UserAPI from '../api/UserAPI';
 import { useSelector } from 'react-redux';
 
 const ChangePassword = ({ navigation }) => {
-  const { accessToken } = useSelector((state) => state.user);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,7 +31,7 @@ const ChangePassword = ({ navigation }) => {
       return;
     }
 
-    const data = await UserAPI.updatePassword(currentPassword, newPassword, accessToken);
+    const data = await UserAPI.updatePassword(currentPassword, newPassword);
     if (data) {
       setCurrentPassword('');
       setNewPassword('');

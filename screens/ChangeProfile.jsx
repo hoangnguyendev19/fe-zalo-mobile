@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Avatar, RadioButton, Snackbar } from 'react-native-paper';
-import { convertToDate } from '../utils/index';
+import { convertToDate } from '../utils/handler';
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../redux/userSlice';
@@ -20,8 +20,9 @@ import UserAPI from '../api/UserAPI';
 import UploadAPI from '../api/UploadAPI';
 
 const ChangeProfile = () => {
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [fullName, setFullName] = useState(user?.fullName || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth || new Date());
   const [gender, setGender] = useState(user?.gender ? 'male' : 'female');
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || '');
@@ -70,14 +71,21 @@ const ChangeProfile = () => {
 
   const handleUpdateProfile = async () => {
     if (fullName === '') {
-      setVisible(true);
       setErr('Bạn chưa nhập họ và tên!');
+      setVisible(true);
+      return;
+    }
+
+    if (email.trim() === '') {
+      setErr('Bạn chưa nhập email!');
+      setVisible(true);
       return;
     }
 
     setAnimating(true);
     let newUser = {
       fullName,
+      email,
       dateOfBirth,
       gender: gender === 'male' ? true : false,
       avatarUrl,
@@ -111,7 +119,7 @@ const ChangeProfile = () => {
       }
     }
 
-    const data = await UserAPI.updateMe(newUser, accessToken);
+    const data = await UserAPI.updateMe(newUser);
     if (data) {
       dispatch(setUser(data));
       navigation.navigate('Profile');
@@ -258,6 +266,33 @@ const ChangeProfile = () => {
           }}
           value={fullName}
           onChangeText={(text) => setFullName(text)}
+        />
+      </View>
+      <View
+        style={{
+          marginBottom: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            marginBottom: 5,
+            fontWeight: 'bold',
+          }}
+        >
+          Email
+        </Text>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 5,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            fontSize: 16,
+          }}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
       <View

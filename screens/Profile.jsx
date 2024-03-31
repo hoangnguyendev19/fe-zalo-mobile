@@ -8,7 +8,7 @@ import { EvilIcons, Entypo } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/userSlice';
 import UserAPI from '../api/UserAPI';
-import { convertToDate } from '../utils';
+import { convertToDate } from '../utils/handler';
 
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -36,6 +36,10 @@ const Profile = ({ navigation }) => {
     {
       title: <Text style={{ fontWeight: 500 }}>Ngày sinh</Text>,
       content: <Text>{convertToDate(user?.dateOfBirth)}</Text>,
+    },
+    {
+      title: <Text style={{ fontWeight: 500 }}>Email</Text>,
+      content: <Text>{user?.email}</Text>,
     },
   ];
   const itemsChange = [

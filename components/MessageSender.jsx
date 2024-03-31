@@ -2,7 +2,7 @@ import { Image, Pressable, Text, View } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
-import { convertToTime } from '../utils';
+import { convertToTime } from '../utils/handler';
 import { Video, ResizeMode } from 'expo-av';
 
 const MessageSender = ({ message, handleZoomImage, handleRevokeMessage }) => {

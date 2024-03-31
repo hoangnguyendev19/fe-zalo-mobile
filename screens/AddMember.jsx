@@ -6,7 +6,7 @@ import ConversationAPI from '../api/ConversationAPI';
 import { addUser } from '../redux/conversationSlice';
 
 const AddMember = ({ navigation, route }) => {
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { conversation } = route.params;
   const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ const AddMember = ({ navigation, route }) => {
   const [err, setErr] = useState('');
 
   const handleAddMember = async (id) => {
-    const data = await ConversationAPI.addUserForConversation(id, conversation.id, accessToken);
+    const data = await ConversationAPI.addUserForConversation(id, conversation.id);
     if (data) {
       dispatch(addUser({ conversationId: conversation.id, user: data }));
       navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });

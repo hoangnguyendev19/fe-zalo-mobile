@@ -11,12 +11,13 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
 import { getAllConversations } from '../redux/conversationSlice';
+import UserAPI from '../api/UserAPI';
+import { setUser } from '../redux/userSlice';
 
 const Tab = createBottomTabNavigator();
 
 const Main = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state) => state.user);
 
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
@@ -24,14 +25,25 @@ const Main = ({ navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await ConversationAPI.getAllConversationForUser(accessToken);
+      const data = await UserAPI.getMe();
+      if (data) {
+        dispatch(setUser(data));
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await ConversationAPI.getAllConversationForUser();
       if (data) {
         dispatch(getAllConversations(data));
       }
     };
 
     fetchData();
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 
   const handleAddFriend = () => {
     closeMenu();

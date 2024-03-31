@@ -1,22 +1,21 @@
-import { Link } from '@react-navigation/native';
 import { useState } from 'react';
-import { Text, View, TextInput, Pressable } from 'react-native';
-import { Snackbar } from 'react-native-paper';
+import { Text, View, Pressable } from 'react-native';
+import { Snackbar, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
 import UserAPI from '../api/UserAPI';
-import { signup } from '../redux/userSlice';
-import { io } from 'socket.io-client';
 
 const Signup = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
 
   const handleSignup = async () => {
     if (fullName.trim() === '') {
@@ -32,7 +31,19 @@ const Signup = ({ navigation }) => {
     }
 
     if (phoneNumber.length !== 10) {
-      setErr('Số điện thoại có 10 chữ số!');
+      setErr('Số điện thoại phải có 10 chữ số!');
+      setVisible(true);
+      return;
+    }
+
+    if (email.trim() === '') {
+      setErr('Bạn chưa nhập email!');
+      setVisible(true);
+      return;
+    }
+
+    if (!email.includes('@gmail.com')) {
+      setErr('Email không hợp lệ!');
       setVisible(true);
       return;
     }
@@ -55,18 +66,12 @@ const Signup = ({ navigation }) => {
       return;
     }
 
-    const data = await UserAPI.signup(fullName, phoneNumber, password);
+    const data = await UserAPI.signup(email, phoneNumber);
+
     if (data) {
-      const socket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
-      socket.emit('login', data.user.id);
-      dispatch(signup(data));
-      setFullName('');
-      setPhoneNumber('');
-      setPassword('');
-      setRePassword('');
-      navigation.navigate('Main');
+      navigation.navigate('Otp', { fullName, email, phoneNumber, password });
     } else {
-      setErr('Số điện thoại đã tồn tại!');
+      setErr('Số điện thoại hoặc email đã tồn tại!');
       setVisible(true);
     }
   };
@@ -86,60 +91,76 @@ const Signup = ({ navigation }) => {
         </Text>
       </View>
       <TextInput
-        placeholder="Họ và tên"
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Họ và tên"
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
         value={fullName}
         onChangeText={(text) => setFullName(text)}
       />
       <TextInput
-        placeholder="Số điện thoại"
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Số điện thoại"
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
-        placeholder="Mật khẩu"
-        secureTextEntry={true}
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Email"
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
+      <TextInput
+        label="Mật khẩu"
+        secureTextEntry={!showPassword}
+        style={{
+          marginHorizontal: 15,
+          fontSize: 16,
+          marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
+        }}
+        right={
+          <TextInput.Icon
+            icon={showPassword ? 'eye-off' : 'eye'}
+            onPress={() => setShowPassword(!showPassword)}
+          />
+        }
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
       <TextInput
-        placeholder="Nhập lại mật khẩu"
-        secureTextEntry={true}
-        placeholderTextColor="rgba(0,0,0,0.5)"
+        label="Nhập lại mật khẩu"
+        secureTextEntry={!showRePassword}
         style={{
-          paddingVertical: 10,
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
           marginHorizontal: 15,
           fontSize: 16,
           marginTop: 20,
+          backgroundColor: '#fff',
+          color: '#000',
         }}
+        right={
+          <TextInput.Icon
+            icon={showRePassword ? 'eye-off' : 'eye'}
+            onPress={() => setShowRePassword(!showRePassword)}
+          />
+        }
         value={rePassword}
         onChangeText={(text) => setRePassword(text)}
       />

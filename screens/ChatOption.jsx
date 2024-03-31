@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ChatOption = ({ route, navigation }) => {
   const { conversationId } = route.params;
-  const { accessToken, user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [conversation, setConversation] = useState(null);
   const [friend, setFriend] = useState(null);
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const ChatOption = ({ route, navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await ConversationAPI.getConversationById(conversationId, accessToken);
+      const data = await ConversationAPI.getConversationById(conversationId);
       if (data) {
         if (data.type === 'FRIEND') {
           const fri = data.members.find((mem) => mem.id !== user.id);
@@ -32,7 +32,7 @@ const ChatOption = ({ route, navigation }) => {
     };
 
     fetchData();
-  }, [conversationId, accessToken]);
+  }, [conversationId]);
 
   const handleDelConversation = async () => {
     if (conversation?.admin !== user?.id) {
@@ -40,7 +40,7 @@ const ChatOption = ({ route, navigation }) => {
       setVisible(true);
       return;
     }
-    const data = await ConversationAPI.deleteConversation(conversationId, accessToken);
+    const data = await ConversationAPI.deleteConversation(conversationId);
     if (data) {
       dispatch(deleteConversation(conversationId));
       navigate.navigate('Main');
@@ -60,7 +60,7 @@ const ChatOption = ({ route, navigation }) => {
       return;
     }
 
-    const data = await ConversationAPI.removeYourselfForConversation(conversationId, accessToken);
+    const data = await ConversationAPI.removeYourselfForConversation(conversationId);
     if (data) {
       dispatch(removeYourself(conversationId));
       navigate.navigate('Main');

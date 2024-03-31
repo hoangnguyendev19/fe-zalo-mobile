@@ -9,10 +9,10 @@ const Receiver = ({ navigation }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const handleAcceptFriend = async (id) => {
-    const data = await UserAPI.acceptFriend(id, accessToken);
+    const data = await UserAPI.acceptFriend(id);
     if (data) {
       dispatch(setUser(data));
     } else {
@@ -22,7 +22,7 @@ const Receiver = ({ navigation }) => {
   };
 
   const handleDeleteAcceptFriend = async (id) => {
-    const data = await UserAPI.deleteAcceptFriend(id, accessToken);
+    const data = await UserAPI.deleteAcceptFriend(id);
     if (data) {
       dispatch(setUser(data));
     } else {

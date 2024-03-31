@@ -6,7 +6,7 @@ import avt from '../assets/images/img-user.png';
 import LineInfor from '../components/LineInfor';
 import { useEffect, useState } from 'react';
 import UserAPI from '../api/UserAPI';
-import { convertToDate } from '../utils';
+import { convertToDate } from '../utils/handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../redux/userSlice';
 import { Entypo, AntDesign } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ import { Entypo, AntDesign } from '@expo/vector-icons';
 const InforProfile = ({ route, navigation }) => {
   const { userId } = route.params;
   const [currUser, setCurrUser] = useState({});
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [delFriend, setDelFriend] = useState(false);
 
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const InforProfile = ({ route, navigation }) => {
   }, [user, currUser]);
 
   const handleDeleteFriend = async () => {
-    const data = await UserAPI.deleteFriend(currUser.id, accessToken);
+    const data = await UserAPI.deleteFriend(currUser.id);
     if (data) {
       dispatch(setUser(data));
       navigation.navigate('Main');
@@ -59,6 +59,10 @@ const InforProfile = ({ route, navigation }) => {
     {
       title: <Text style={{ fontWeight: 500 }}>Ngày sinh</Text>,
       content: <Text>{convertToDate(user?.dateOfBirth)}</Text>,
+    },
+    {
+      title: <Text style={{ fontWeight: 500 }}>Email</Text>,
+      content: <Text>{user?.email}</Text>,
     },
   ];
 

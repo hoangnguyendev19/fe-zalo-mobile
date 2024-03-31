@@ -9,10 +9,10 @@ const Sender = ({ navigation }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const handleRevokeFriend = async (id) => {
-    const data = await UserAPI.revokeFriend(id, accessToken);
+    const data = await UserAPI.revokeFriend(id);
     if (data) {
       dispatch(setUser(data));
     } else {

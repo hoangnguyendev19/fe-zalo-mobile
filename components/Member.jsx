@@ -8,11 +8,11 @@ import { removeUser, assignAdmin } from '../redux/conversationSlice';
 
 const Member = ({ navigation, mem, conversation, setShow, setErr }) => {
   const [visible, setVisible] = useState(false);
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleAssignAdmin = async (id) => {
-    const data = await ConversationAPI.assignAdminForConversation(id, conversation.id, accessToken);
+    const data = await ConversationAPI.assignAdminForConversation(id, conversation.id);
     if (data) {
       dispatch(assignAdmin({ conversationId: conversation.id, userId: id }));
       navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
@@ -30,7 +30,7 @@ const Member = ({ navigation, mem, conversation, setShow, setErr }) => {
       setShow(true);
       return;
     }
-    const data = await ConversationAPI.removeUserForConversation(id, conversation.id, accessToken);
+    const data = await ConversationAPI.removeUserForConversation(id, conversation.id);
     if (data) {
       dispatch(removeUser({ conversationId: conversation.id, userId: id }));
       navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });

@@ -7,7 +7,7 @@ import ConversationAPI from '../api/ConversationAPI';
 import { createConversation } from '../redux/conversationSlice';
 
 const CreateGroup = ({ navigation }) => {
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [members, setMembers] = useState([]);
   const [name, setName] = useState('');
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const CreateGroup = ({ navigation }) => {
       type: 'GROUP',
     };
 
-    const data = await ConversationAPI.createConversation(conversation, accessToken);
+    const data = await ConversationAPI.createConversation(conversation);
     if (data) {
       dispatch(createConversation(data));
       navigation.navigate('Chat', { conversationId: data.id, name: data.name });

@@ -18,7 +18,7 @@ const Chat = ({ navigation, route }) => {
   const [type, setType] = useState('TEXT'); // TEXT - IMAGE - FILE - VIDEO
 
   const { conversationId, name } = route.params;
-  const { user, accessToken } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
   const [image, setImage] = useState('');
 
@@ -28,7 +28,7 @@ const Chat = ({ navigation, route }) => {
     });
 
     const fetchData = async () => {
-      const data = await MessageAPI.getAllMessageForConversation(conversationId, accessToken);
+      const data = await MessageAPI.getAllMessageForConversation(conversationId);
 
       if (data) {
         setMessages(data);
@@ -36,7 +36,7 @@ const Chat = ({ navigation, route }) => {
     };
 
     fetchData();
-  }, [navigation, conversationId, accessToken]);
+  }, [navigation, conversationId]);
 
   useEffect(() => {
     const newSocket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
@@ -173,7 +173,7 @@ const Chat = ({ navigation, route }) => {
           type: result.assets[0].mimeType,
         });
 
-        const data = await UploadAPI.uploadFile(formData);
+        const data = await UploadAPI.uploadImage(formData);
 
         if (data) {
           const message = {
