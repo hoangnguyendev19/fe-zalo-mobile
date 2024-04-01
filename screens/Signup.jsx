@@ -25,7 +25,13 @@ const Signup = ({ navigation }) => {
     }
 
     if (phoneNumber.trim() === '') {
-      setErr('Bạn chưa nhập só điện thoại!');
+      setErr('Bạn chưa nhập số điện thoại!');
+      setVisible(true);
+      return;
+    }
+
+    if (isNaN(phoneNumber)) {
+      setErr('Số điện thoại không hợp lệ!');
       setVisible(true);
       return;
     }
