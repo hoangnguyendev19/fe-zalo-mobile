@@ -1,4 +1,4 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Linking, Pressable, Text, View } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
@@ -85,15 +85,17 @@ const MessageSender = ({ message, handleZoomImage, handleRevokeMessage }) => {
                     padding: 10,
                     borderRadius: 10,
                   }}
-                  // onPress={() => {
-                  //   console.log('Press');
-                  // }}
+                  onPress={() => {
+                    Linking.openURL(content);
+                  }}
                 >
                   {content.includes('pdf') && <AntDesign name="pdffile1" size={40} color="black" />}
                   {content.includes('docx') && (
                     <AntDesign name="wordfile1" size={40} color="black" />
                   )}
-                  <Text style={{ marginLeft: 5, color: 'black' }}>{content.split('/').pop()}</Text>
+                  <Text style={{ marginLeft: 5, color: 'black' }}>
+                    {content.split('/').pop().split('%')[0]}
+                  </Text>
                 </Pressable>
               )}
               {type === 'VIDEO' && (
@@ -122,15 +124,41 @@ const MessageSender = ({ message, handleZoomImage, handleRevokeMessage }) => {
                       )}
                     </Pressable>
                   </View>
+                  <Pressable
+                    style={{
+                      paddingVertical: 10,
+                      backgroundColor: 'rgba(0,0,0,0.1)',
+                      marginTop: 5,
+                    }}
+                    onPress={() => Linking.openURL(content)}
+                  >
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>
+                      Tải xuống
+                    </Text>
+                  </Pressable>
                 </View>
               )}
               {type === 'IMAGE' && (
-                <Pressable
-                  style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                  onPress={() => handleZoomImage(content)}
-                >
-                  <Image source={{ uri: content }} style={{ width: 220, height: 220 }} />
-                </Pressable>
+                <View>
+                  <Pressable
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => handleZoomImage(content)}
+                  >
+                    <Image source={{ uri: content }} style={{ width: 220, height: 220 }} />
+                  </Pressable>
+                  <Pressable
+                    style={{
+                      paddingVertical: 10,
+                      backgroundColor: 'rgba(0,0,0,0.1)',
+                      marginTop: 5,
+                    }}
+                    onPress={() => Linking.openURL(content)}
+                  >
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>
+                      Tải xuống
+                    </Text>
+                  </Pressable>
+                </View>
               )}
               <Text
                 style={{ color: 'rgba(0,0,0,0.2)', fontSize: 12, marginTop: 5, marginBottom: 10 }}

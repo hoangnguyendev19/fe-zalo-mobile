@@ -13,7 +13,12 @@ const ChangePassword = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
 
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (
+      currentPassword.trim() === '' ||
+      newPassword.trim() === '' ||
+      confirmPassword.trim() === '' ||
+      (currentPassword.trim() === '' && newPassword.trim() === '' && confirmPassword.trim() === '')
+    ) {
       setErr('Vui lòng nhập đầy đủ thông tin');
       setVisible(true);
       return;

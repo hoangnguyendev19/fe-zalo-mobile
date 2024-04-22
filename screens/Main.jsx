@@ -6,22 +6,31 @@ import Messager from './Messager';
 import Contact from './Contact';
 import Profile from './Profile';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Divider, Menu } from 'react-native-paper';
+import { Divider, Menu, Snackbar } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
-import { getAllConversations } from '../redux/conversationSlice';
+import {
+  createConversation,
+  deleteConversation,
+  getAllConversations,
+} from '../redux/conversationSlice';
 import UserAPI from '../api/UserAPI';
 import { setUser } from '../redux/userSlice';
+import connectSocket from '../utils/socketConfig';
 
 const Tab = createBottomTabNavigator();
 
 const Main = ({ navigation }) => {
   const dispatch = useDispatch();
-
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  const { user } = useSelector((state) => state.user);
+  const socket = connectSocket();
+
+  const [show, setShow] = useState(false);
+  const [msg, setMsg] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +53,93 @@ const Main = ({ navigation }) => {
 
     fetchData();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (socket && socket.disconnected) {
+      socket.connect();
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket && user) {
+      socket.on(user.id, (data) => {
+        if (data.code === 'receive_request_friend') {
+          dispatch(setUser(data.data));
+          setMsg(`${data.sender} đã gửi lời mời kết bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_accept_friend') {
+          dispatch(setUser(data.data));
+          setMsg(`${data.sender} đã chấp nhận lời mời kết bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_revoke_friend') {
+          dispatch(setUser(data.data));
+          setMsg(`${data.sender} đã hủy yêu cầu kết bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_delete_accept_friend') {
+          dispatch(setUser(data.data));
+          setMsg(`${data.sender} đã từ chối lời mời kết bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_delete_friend') {
+          dispatch(setUser(data.data));
+          setMsg(`${data.sender} đã xóa bạn khỏi danh sách bạn bè`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_create_conversation') {
+          dispatch(createConversation(data.data));
+          setMsg(`${data.sender} đã tạo cuộc hội thoại với bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_create_group') {
+          dispatch(createConversation(data.data));
+          setMsg(`${data.sender} đã tạo nhóm ${data.name} với bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_delete_conversation') {
+          dispatch(deleteConversation(data.data));
+          setMsg(`${data.sender} đã xoá cuộc hội thoại với bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_delete_group') {
+          dispatch(deleteConversation(data.data));
+          setMsg(`${data.sender} đã giải tán nhóm ${data.name} với bạn`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_join_group') {
+          dispatch(createConversation(data.data));
+          setMsg(`${data.sender} đã mời bạn tham gia nhóm ${data.name}`);
+          setShow(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off(user?.id);
+      }
+    };
+  }, [socket, user]);
 
   const handleAddFriend = () => {
     closeMenu();
@@ -138,6 +234,16 @@ const Main = ({ navigation }) => {
           component={Profile}
         />
       </Tab.Navigator>
+      <Snackbar
+        visible={show}
+        onDismiss={() => setShow(false)}
+        action={{
+          label: 'OK',
+          onPress: () => setShow(false),
+        }}
+      >
+        {msg}
+      </Snackbar>
     </SafeAreaView>
   );
 };

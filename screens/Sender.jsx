@@ -2,22 +2,49 @@ import { Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
 import { setUser } from '../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserAPI from '../api/UserAPI';
+import connectSocket from '../utils/socketConfig';
 
 const Sender = ({ navigation }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
   const { user } = useSelector((state) => state.user);
+  const socket = connectSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_revoke_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+        } else if (data.status === 'fail') {
+          setErr('Thu hồi lời mời thất bại');
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_revoke_friend');
+      }
+    };
+  }, [socket]);
 
   const handleRevokeFriend = async (id) => {
-    const data = await UserAPI.revokeFriend(id);
-    if (data) {
-      dispatch(setUser(data));
-    } else {
-      setErr('Thu hồi lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.revokeFriend(id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    // } else {
+    //   setErr('Thu hồi lời mời thất bại!');
+    //   setVisible(true);
+    // }
+    if (socket) {
+      socket.emit('send_revoke_friend', {
+        senderId: user.id,
+        receiverId: id,
+      });
     }
   };
 

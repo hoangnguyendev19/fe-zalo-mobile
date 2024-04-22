@@ -83,6 +83,7 @@ const ChangeProfile = () => {
     }
 
     setAnimating(true);
+
     let newUser = {
       fullName,
       email,
@@ -99,6 +100,7 @@ const ChangeProfile = () => {
         name: 'file',
         type: 'image/jpeg',
       });
+
       const avatar = await UploadAPI.uploadFile(formAvatarUrl);
       if (avatar) {
         newUser = { ...newUser, avatarUrl: avatar };
@@ -112,6 +114,7 @@ const ChangeProfile = () => {
         name: 'file',
         type: 'image/jpeg',
       });
+
       const coverImg = await UploadAPI.uploadFile(formCoverImage);
 
       if (coverImg) {

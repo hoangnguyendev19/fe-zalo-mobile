@@ -2,32 +2,86 @@ import { Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
 import { setUser } from '../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserAPI from '../api/UserAPI';
+import connectSocket from '../utils/socketConfig';
 
 const Receiver = ({ navigation }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
   const { user } = useSelector((state) => state.user);
+  const socket = connectSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_accept_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+        } else if (data.status === 'fail') {
+          setErr('Chấp nhận lời mời thất bại!');
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_accept_friend');
+      }
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_delete_accept_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+        } else if (data.status === 'fail') {
+          setErr('Xoá lời mời thất bại!');
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_delete_accept_friend');
+      }
+    };
+  }, [socket]);
 
   const handleAcceptFriend = async (id) => {
-    const data = await UserAPI.acceptFriend(id);
-    if (data) {
-      dispatch(setUser(data));
-    } else {
-      setErr('Chấp nhận lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.acceptFriend(id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    // } else {
+    //   setErr('Chấp nhận lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_accept_friend', {
+        senderId: user.id,
+        receiverId: id,
+      });
     }
   };
 
   const handleDeleteAcceptFriend = async (id) => {
-    const data = await UserAPI.deleteAcceptFriend(id);
-    if (data) {
-      dispatch(setUser(data));
-    } else {
-      setErr('Xoá lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.deleteAcceptFriend(id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    // } else {
+    //   setErr('Xoá lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_delete_accept_friend', {
+        senderId: user.id,
+        receiverId: id,
+      });
     }
   };
 

@@ -10,12 +10,14 @@ import { convertToDate } from '../utils/handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../redux/userSlice';
 import { Entypo, AntDesign } from '@expo/vector-icons';
+import connectSocket from '../utils/socketConfig';
 
 const InforProfile = ({ route, navigation }) => {
   const { userId } = route.params;
   const [currUser, setCurrUser] = useState({});
   const { user } = useSelector((state) => state.user);
   const [delFriend, setDelFriend] = useState(false);
+  const socket = connectSocket();
 
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
@@ -40,14 +42,35 @@ const InforProfile = ({ route, navigation }) => {
     }
   }, [user, currUser]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_delete_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+          navigation.goBack();
+        } else if (data.status === 'fail') {
+          setErr('Xoá bạn bè thất bại!');
+          setVisible(true);
+        }
+      });
+    }
+  }, [socket]);
+
   const handleDeleteFriend = async () => {
-    const data = await UserAPI.deleteFriend(currUser.id);
-    if (data) {
-      dispatch(setUser(data));
-      navigation.navigate('Main');
-    } else {
-      setErr('Xoá bạn bè thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.deleteFriend(currUser.id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    //   navigation.navigate('Main');
+    // } else {
+    //   setErr('Xoá bạn bè thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_delete_friend', {
+        senderId: user.id,
+        receiverId: currUser.id,
+      });
     }
   };
 

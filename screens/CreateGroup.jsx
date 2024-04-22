@@ -1,16 +1,35 @@
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Avatar, Checkbox, Snackbar } from 'react-native-paper';
 import ImgUser from '../assets/images/img-user.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
 import { createConversation } from '../redux/conversationSlice';
+import connectSocket from '../utils/socketConfig';
 
 const CreateGroup = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);
   const [members, setMembers] = useState([]);
   const [name, setName] = useState('');
   const dispatch = useDispatch();
+  const socket = connectSocket();
+
+  const [visible, setVisible] = useState(false);
+  const [err, setErr] = useState('');
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_create_group', (data) => {
+        if (data.status === 'success') {
+          dispatch(createConversation(data.data));
+          navigation.navigate('Chat', { conversationId: data.data.id, name: data.data.name });
+        } else if (data.status === 'fail') {
+          setErr('Tạo nhóm thất bại');
+          setVisible(true);
+        }
+      });
+    }
+  }, [socket]);
 
   const [friends, setFriends] = useState(
     user &&
@@ -18,8 +37,6 @@ const CreateGroup = ({ navigation }) => {
         return { ...fri, isChecked: false };
       }),
   );
-  const [visible, setVisible] = useState(false);
-  const [err, setErr] = useState('');
 
   const handleCheckBox = (id) => {
     let newMembers = [...members];
@@ -40,18 +57,14 @@ const CreateGroup = ({ navigation }) => {
   };
 
   const handleCreateGroup = async () => {
-    if (members.length <= 0) {
-      setErr('Bạn chưa chọn thành viên của nhóm!');
-      setVisible(true);
-      return;
-    }
-    if (members.length < 2) {
-      setErr('Số lượng chọn ít nhất 2 thành viên!');
-      setVisible(true);
-      return;
-    }
     if (name.trim() === '') {
       setErr('Bạn chưa nhập tên nhóm!');
+      setVisible(true);
+      return;
+    }
+
+    if (members.length < 2) {
+      setErr('Số lượng chọn ít nhất 2 thành viên!');
       setVisible(true);
       return;
     }
@@ -63,13 +76,16 @@ const CreateGroup = ({ navigation }) => {
       type: 'GROUP',
     };
 
-    const data = await ConversationAPI.createConversation(conversation);
-    if (data) {
-      dispatch(createConversation(data));
-      navigation.navigate('Chat', { conversationId: data.id, name: data.name });
-    } else {
-      setErr('Tạo nhóm thất bại!');
-      setVisible(true);
+    // const data = await ConversationAPI.createConversation(conversation);
+    // if (data) {
+    //   dispatch(createConversation(data));
+    //   navigation.navigate('Chat', { conversationId: data.id, name: data.name });
+    // } else {
+    //   setErr('Tạo nhóm thất bại!');
+    //   setVisible(true);
+    // }
+    if (socket) {
+      socket.emit('send_create_group', conversation);
     }
   };
 
