@@ -4,23 +4,34 @@ import { Ionicons } from '@expo/vector-icons';
 import MessageReceiver from '../components/MessageReceiver';
 import MessageSender from '../components/MessageSender';
 import { io } from 'socket.io-client';
-import { useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import MessageAPI from '../api/MessageAPI';
 import * as ImagePicker from 'expo-image-picker';
-import { Modal } from 'react-native-paper';
+import { Modal, Snackbar } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
 import UploadAPI from '../api/UploadAPI';
+import connectSocket from '../utils/socketConfig';
+import { addUser, assignAdmin, deleteConversation, removeUser } from '../redux/conversationSlice';
+
+const TYPING_DELAY = 5000; // Adjust the delay as needed
 
 const Chat = ({ navigation, route }) => {
   const [content, setContent] = useState('');
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [type, setType] = useState('TEXT'); // TEXT - IMAGE - FILE - VIDEO
+  const socket = connectSocket();
+  const dispatch = useDispatch();
 
   const { conversationId, name } = route.params;
   const { user } = useSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
   const [image, setImage] = useState('');
+
+  const [typing, setTyping] = useState(false);
+  const [userTyping, setUserTyping] = useState('');
+  let typingTimer = null;
+
+  const [err, setErr] = useState('');
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -39,16 +50,80 @@ const Chat = ({ navigation, route }) => {
   }, [navigation, conversationId]);
 
   useEffect(() => {
-    const newSocket = io(`${process.env.EXPO_PUBLIC_SOCKET_URL}`);
-    newSocket.emit('join_room', { conversationId, userId: user.id });
-    setSocket(newSocket);
+    if (socket && user) {
+      socket.on(user.id, (data) => {
+        if (data.code === 'receive_remove_yourself') {
+          dispatch(removeUser(data.data));
+          setErr(`${data.sender} đã rời khỏi nhóm ${data.name}`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_assign_admin') {
+          dispatch(assignAdmin(data.data));
+          setErr(`Trưởng nhóm đã trao cho ${data.member} làm trưởng nhóm của nhóm ${data.name}`);
+          setShow(true);
+          return;
+        }
+
+        if (data.code === 'receive_remove_member') {
+          dispatch(removeUser(data.data));
+          setErr(`Trưởng nhóm đã xóa ${data.member} khỏi nhóm ${data.name}`);
+          setShow(true);
+        }
+
+        if (data.code === 'receive_leave_group') {
+          dispatch(deleteConversation(data.data));
+          setErr(`Trưởng nhóm đã xoá bạn khỏi nhóm ${data.name}`);
+          setShow(true);
+        }
+
+        if (data.code === 'receive_add_member') {
+          dispatch(addUser(data.data));
+          setErr(`${data.sender} đã thêm ${data.member} vào nhóm ${data.name}`);
+          setShow(true);
+        }
+      });
+    }
 
     return () => {
-      if (newSocket) {
-        newSocket.disconnect();
+      if (socket) {
+        socket.off(user?.id);
       }
     };
-  }, []);
+  }, [socket, user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('join_room', {
+        conversationId: conversationId,
+        userId: user.id,
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('join_room');
+      }
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('typing', (fullName) => {
+        setTyping(fullName !== '');
+        if (fullName !== '') {
+          setUserTyping(fullName);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('typing');
+      }
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (socket) {
@@ -123,7 +198,7 @@ const Chat = ({ navigation, route }) => {
   const handleSendMessage = () => {
     const message = {
       content,
-      type,
+      type: 'TEXT',
       conversationId,
       senderId: user.id,
     };
@@ -166,8 +241,15 @@ const Chat = ({ navigation, route }) => {
       });
 
       if (!result.canceled) {
+        // limit file size
+        if (result.assets[0].size > 2097152) {
+          setErr('File quá lớn, vui lòng chọn file dưới 2MB!');
+          setShow(true);
+          return;
+        }
+
         const formData = new FormData();
-        formData.append('file', {
+        formData.append('image', {
           uri: result.assets[0].uri,
           name: result.assets[0].type === 'image' ? 'image' : 'video',
           type: result.assets[0].mimeType,
@@ -196,6 +278,13 @@ const Chat = ({ navigation, route }) => {
     try {
       let result = await DocumentPicker.getDocumentAsync();
       if (!result.canceled) {
+        // limit file size
+        if (result.assets[0].size > 2097152) {
+          setErr('File quá lớn, vui lòng chọn file dưới 2MB!');
+          setShow(true);
+          return;
+        }
+
         const formData = new FormData();
         formData.append('file', {
           uri: result.assets[0].uri,
@@ -219,6 +308,33 @@ const Chat = ({ navigation, route }) => {
     } catch (error) {
       console.log('Error: ', error.message);
     }
+  };
+
+  const handleChange = (text) => {
+    setContent(text);
+    if (!typing) {
+      handleTypingStart();
+    }
+
+    handleTypingEnd();
+  };
+
+  const handleTypingStart = () => {
+    socket.emit('typing_start', {
+      conversationId: conversationId,
+      userId: user?.id,
+    });
+    clearTimeout(typingTimer); // Clear any existing timer
+  };
+
+  const handleTypingEnd = () => {
+    typingTimer = setTimeout(() => {
+      socket.emit('typing_end', {
+        conversationId: conversationId,
+        userId: user?.id,
+      });
+      setTyping(false);
+    }, TYPING_DELAY);
   };
 
   return (
@@ -253,35 +369,63 @@ const Chat = ({ navigation, route }) => {
             }
           })}
       </ScrollView>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginTop: 'auto',
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          borderTopWidth: 1,
-          borderStyle: 'solid',
-          borderColor: '#ccc',
+      <View style={{ marginTop: 'auto', position: 'relative' }}>
+        <View
+          style={{
+            backgroundColor: 'transparent',
+            position: 'absolute',
+            top: -20,
+            left: 0,
+            right: 0,
+          }}
+        >
+          {typing && (
+            <Text style={{ color: '#0091ff', paddingHorizontal: 15, fontSize: 14 }}>
+              {`${userTyping} đang nhập tin nhắn...`}
+            </Text>
+          )}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+            borderTopWidth: 1,
+            borderStyle: 'solid',
+            borderColor: '#ccc',
+          }}
+        >
+          <TextInput
+            placeholder="Tin nhắn"
+            placeholderTextColor="rgba(0,0,0,0.2)"
+            style={{ width: '60%' }}
+            value={content}
+            onChangeText={(text) => handleChange(text)}
+          />
+          <Pressable onPress={handlePickFile}>
+            <Ionicons name="attach" size={24} color="#0091ff" />
+          </Pressable>
+          <Pressable style={{ marginLeft: 20 }} onPress={handlePickImage}>
+            <Ionicons name="image-outline" size={24} color="#0091ff" />
+          </Pressable>
+          <Pressable style={{ marginLeft: 20 }} onPress={handleSendMessage}>
+            <Text style={{ color: '#0091ff', fontSize: 16, fontWeight: 'bold' }}>Gửi</Text>
+          </Pressable>
+        </View>
+      </View>
+      <Snackbar
+        visible={show}
+        onDismiss={() => setShow(false)}
+        action={{
+          label: 'OK',
+          onPress: () => {
+            setShow(false);
+          },
         }}
       >
-        <TextInput
-          placeholder="Tin nhắn"
-          placeholderTextColor="rgba(0,0,0,0.2)"
-          style={{ width: '60%' }}
-          value={content}
-          onChangeText={(text) => setContent(text)}
-        />
-        <Pressable onPress={handlePickFile}>
-          <Ionicons name="attach" size={24} color="#0091ff" />
-        </Pressable>
-        <Pressable style={{ marginLeft: 20 }} onPress={handlePickImage}>
-          <Ionicons name="image-outline" size={24} color="#0091ff" />
-        </Pressable>
-        <Pressable style={{ marginLeft: 20 }} onPress={handleSendMessage}>
-          <Text style={{ color: '#0091ff', fontSize: 16, fontWeight: 'bold' }}>Gửi</Text>
-        </Pressable>
-      </View>
+        {err}
+      </Snackbar>
       <Modal
         visible={visible}
         onDismiss={() => setVisible(false)}

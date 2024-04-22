@@ -9,15 +9,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/userSlice';
 import UserAPI from '../api/UserAPI';
 import { convertToDate } from '../utils/handler';
+import connectSocket from '../utils/socketConfig';
 
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const socket = connectSocket();
 
   const handleLogout = async () => {
     await UserAPI.logout();
-    navigation.navigate('Start');
     dispatch(logout());
+    if (socket) {
+      socket.emit('logout', user.id);
+    }
+    navigation.navigate('Start');
   };
 
   const handleUpdatePwd = () => {

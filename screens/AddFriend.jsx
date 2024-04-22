@@ -6,6 +6,7 @@ import UserAPI from '../api/UserAPI';
 import { setUser } from '../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
+import connectSocket from '../utils/socketConfig';
 
 const AddFriend = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -16,30 +17,124 @@ const AddFriend = ({ navigation }) => {
   const [err, setErr] = useState('');
   const [status, setStatus] = useState('request'); // request - revoke - accept - friend
   const { user } = useSelector((state) => state.user);
+  const socket = connectSocket();
+
+  // useEffect(() => {
+  //   if (user && friend) {
+  //     if (user.friendList.filter((fri) => fri.id === friend.id).length > 0) {
+  //       setStatus('friend');
+  //       return;
+  //     }
+
+  //     if (user.sendedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
+  //       setStatus('revoke');
+  //       return;
+  //     }
+  //     if (user.receivedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
+  //       setStatus('accept');
+  //       return;
+  //     }
+  //     setStatus('request');
+  //   }
+  // }, [friend, user]);
 
   useEffect(() => {
-    if (user && friend) {
-      if (user.friendList.filter((fri) => fri.id === friend.id).length > 0) {
-        setStatus('friend');
-        return;
-      }
-
-      if (user.sendedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
-        setStatus('revoke');
-        return;
-      }
-      if (user.receivedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
-        setStatus('accept');
-        return;
-      }
-      setStatus('request');
+    if (socket) {
+      socket.on('send_request_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+          setStatus('revoke');
+        } else if (data.status === 'fail') {
+          // toast.error(data.message);
+          setErr(data.message);
+          setVisible(true);
+        }
+      });
     }
-  }, [friend, user]);
+
+    return () => {
+      if (socket) {
+        socket.off('send_request_friend');
+      }
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_accept_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+          setStatus('friend');
+        } else if (data.status === 'fail') {
+          // toast.error(data.message);
+          setErr(data.message);
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_accept_friend');
+      }
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_revoke_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+          setStatus('request');
+        } else if (data.status === 'fail') {
+          // toast.error(data.message);
+          setErr(data.message);
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_revoke_friend');
+      }
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_delete_accept_friend', (data) => {
+        if (data.status === 'success') {
+          dispatch(setUser(data.data));
+          setStatus('request');
+        } else if (data.status === 'fail') {
+          // toast.error(data.message);
+          setErr(data.message);
+          setVisible(true);
+        }
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('send_delete_accept_friend');
+      }
+    };
+  }, [socket]);
 
   const handleSearch = async () => {
     const data = await UserAPI.getUserByPhoneNumber(phoneNumber);
     if (data) {
       setFriend(data);
+      if (user.friendList.find((friend) => friend.id === data.id)) {
+        setStatus('friend');
+      } else if (user.sendedRequestList.find((friend) => friend.id === data.id)) {
+        setStatus('revoke');
+      } else if (user.receivedRequestList.find((friend) => friend.id === data.id)) {
+        setStatus('accept');
+      } else {
+        setStatus('request');
+      }
     } else {
       setErr('Không tìm thấy người dùng với số điện thoại này!');
       setVisible(true);
@@ -47,46 +142,74 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleRequestFriend = async () => {
-    const data = await UserAPI.requestFriend(friend.id);
-    if (data) {
-      dispatch(setUser(data));
-      setStatus('revoke');
-    } else {
-      setErr('Gửi lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.requestFriend(friend.id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    //   setStatus('revoke');
+    // } else {
+    //   setErr('Gửi lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_request_friend', {
+        senderId: user.id,
+        receiverId: friend.id,
+      });
     }
   };
 
   const handleRevokeFriend = async () => {
-    const data = await UserAPI.revokeFriend(friend.id);
-    if (data) {
-      dispatch(setUser(data));
-      setStatus('request');
-    } else {
-      setErr('Thu hồi lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.revokeFriend(friend.id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    //   setStatus('request');
+    // } else {
+    //   setErr('Thu hồi lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_revoke_friend', {
+        senderId: user.id,
+        receiverId: friend.id,
+      });
     }
   };
 
   const handleAcceptFriend = async () => {
-    const data = await UserAPI.acceptFriend(friend.id);
-    if (data) {
-      dispatch(setUser(data));
-      setStatus('friend');
-    } else {
-      setErr('Chấp nhận lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.acceptFriend(friend.id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    //   setStatus('friend');
+    // } else {
+    //   setErr('Chấp nhận lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_accept_friend', {
+        senderId: user.id,
+        receiverId: friend.id,
+      });
     }
   };
 
   const handleDeleteAcceptFriend = async () => {
-    const data = await UserAPI.deleteAcceptFriend(friend.id);
-    if (data) {
-      dispatch(setUser(data));
-      setStatus('request');
-    } else {
-      setErr('Xoá lời mời thất bại!');
-      setVisible(true);
+    // const data = await UserAPI.deleteAcceptFriend(friend.id);
+    // if (data) {
+    //   dispatch(setUser(data));
+    //   setStatus('request');
+    // } else {
+    //   setErr('Xoá lời mời thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_delete_accept_friend', {
+        senderId: user.id,
+        receiverId: friend.id,
+      });
     }
   };
 

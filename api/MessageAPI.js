@@ -10,6 +10,16 @@ const getAllMessageForConversation = async (conversationId) => {
   }
 };
 
+const getLatestMessageForConversation = async (conversationId) => {
+  try {
+    const { data } = await axiosAuth.get(`/api/v1/messages/latest?conversation=${conversationId}`);
+
+    return data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const createMessage = async (message) => {
   try {
     const { data } = await axiosAuth.post('/api/v1/messages', message);
@@ -30,5 +40,10 @@ const revokeMessage = async (messageId) => {
   }
 };
 
-const MessageAPI = { getAllMessageForConversation, createMessage, revokeMessage };
+const MessageAPI = {
+  getAllMessageForConversation,
+  getLatestMessageForConversation,
+  createMessage,
+  revokeMessage,
+};
 export default MessageAPI;

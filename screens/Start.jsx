@@ -14,7 +14,12 @@ const Start = ({ navigation }) => {
   return (
     <SafeAreaView style={{ width: '100%', alignItems: 'center', flex: 1 }}>
       <View style={{ marginTop: 100 }}>
-        <Image source={Logo} width={100} height={100} />
+        <Image
+          source={{
+            uri: 'https://res.cloudinary.com/dthusmigo/image/upload/v1713187622/Chat_App_Logo_g4fw7f.png',
+          }}
+          style={{ width: 260, height: 260 }}
+        />
       </View>
       <Pressable
         style={{
@@ -27,7 +32,7 @@ const Start = ({ navigation }) => {
         onPress={() => navigation.navigate('Login')}
       >
         <Text
-          style={{ textAlign: 'center', fontSize: 20, color: '#fff', textTransform: 'uppercase' }}
+          style={{ textAlign: 'center', fontSize: 18, color: '#fff', textTransform: 'uppercase' }}
         >
           Đăng nhập
         </Text>
@@ -43,7 +48,7 @@ const Start = ({ navigation }) => {
         onPress={() => navigation.navigate('Signup')}
       >
         <Text
-          style={{ textAlign: 'center', fontSize: 20, color: '#000', textTransform: 'uppercase' }}
+          style={{ textAlign: 'center', fontSize: 18, color: '#000', textTransform: 'uppercase' }}
         >
           Đăng ký
         </Text>

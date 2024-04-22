@@ -10,7 +10,7 @@ import { io } from 'socket.io-client';
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('0123456789');
-  const [password, setPassword] = useState('huynguyen@123');
+  const [password, setPassword] = useState('hoangnguyen@123');
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);

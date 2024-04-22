@@ -4,12 +4,26 @@ import { Feather } from '@expo/vector-icons';
 import ConversationAPI from '../api/ConversationAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { createConversation } from '../redux/conversationSlice';
+import connectSocket from '../utils/socketConfig';
+import { useEffect } from 'react';
 
 const ContactCover = ({ navigation, friend }) => {
   const { fullName, avatarUrl, id } = friend;
   const { user } = useSelector((state) => state.user);
   const { conversations } = useSelector((state) => state.conversation);
   const dispatch = useDispatch();
+  const socket = connectSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_create_conversation', (data) => {
+        if (data.status === 'success') {
+          dispatch(createConversation(data.data));
+          navigation.navigate('Chat', { conversationId: data.data.conversationId, name: fullName });
+        }
+      });
+    }
+  }, [socket]);
 
   const handleCreateConversation = async () => {
     const flag = conversations?.filter(
@@ -27,10 +41,14 @@ const ContactCover = ({ navigation, friend }) => {
       members: [user.id, id],
     };
 
-    const data = await ConversationAPI.createConversation(conversation);
-    if (data) {
-      dispatch(createConversation(data));
-      navigation.navigate('Chat', { conversationId: data.conversationId, name: fullName });
+    // const data = await ConversationAPI.createConversation(conversation);
+    // if (data) {
+    //   dispatch(createConversation(data));
+    //   navigation.navigate('Chat', { conversationId: data.conversationId, name: fullName });
+    // }
+
+    if (socket) {
+      socket.emit('send_create_conversation', conversation);
     }
   };
   return (

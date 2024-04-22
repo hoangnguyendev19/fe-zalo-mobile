@@ -7,6 +7,7 @@ import ConversationAPI from '../api/ConversationAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteConversation, removeYourself } from '../redux/conversationSlice';
 import { useNavigation } from '@react-navigation/native';
+import connectSocket from '../utils/socketConfig';
 
 const ChatOption = ({ route, navigation }) => {
   const { conversationId } = route.params;
@@ -15,6 +16,7 @@ const ChatOption = ({ route, navigation }) => {
   const [friend, setFriend] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigation();
+  const socket = connectSocket();
 
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
@@ -34,36 +36,84 @@ const ChatOption = ({ route, navigation }) => {
     fetchData();
   }, [conversationId]);
 
-  const handleDelConversation = async () => {
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_delete_conversation', (data) => {
+        if (data.status === 'success') {
+          dispatch(deleteConversation(data.data));
+          setConversation(null);
+          navigate.navigate('Main');
+        }
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_delete_group', (data) => {
+        if (data.status === 'success') {
+          dispatch(deleteConversation(data.data));
+          setConversation(null);
+          navigate.navigate('Main');
+        }
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_remove_yourself', (data) => {
+        if (data.status === 'success') {
+          dispatch(removeYourself(data.data));
+          setConversation(null);
+          navigate.navigate('Main');
+        }
+      });
+    }
+  }, [socket]);
+
+  const handleDelGroup = async () => {
     if (conversation?.admin !== user?.id) {
       setErr('Bạn không phải là trưởng nhóm nên không thể xoá cuộc trò chuyện!');
       setVisible(true);
       return;
     }
-    const data = await ConversationAPI.deleteConversation(conversationId);
-    if (data) {
-      dispatch(deleteConversation(conversationId));
-      navigate.navigate('Main');
+    // const data = await ConversationAPI.deleteConversation(conversationId);
+    // if (data) {
+    //   dispatch(deleteConversation(conversationId));
+    //   navigate.navigate('Main');
+    // }
+    if (socket) {
+      socket.emit('send_delete_group', conversationId);
+    }
+  };
+
+  const handleDelConversation = async () => {
+    if (socket) {
+      socket.emit('send_delete_conversation', {
+        conversationId: conversationId,
+        userId: user?.id,
+      });
     }
   };
 
   const handleRemoveYourself = async () => {
-    if (conversation.members.length === 3) {
-      setErr('Nhóm phải có ít nhất 3 người!');
-      setVisible(true);
-      return;
-    }
-
     if (conversation?.admin === user?.id) {
       setErr('Trước khi rời nhóm, bạn cần phải trao quyền cho người khác!');
       setVisible(true);
       return;
     }
 
-    const data = await ConversationAPI.removeYourselfForConversation(conversationId);
-    if (data) {
-      dispatch(removeYourself(conversationId));
-      navigate.navigate('Main');
+    // const data = await ConversationAPI.removeYourselfForConversation(conversationId);
+    // if (data) {
+    //   dispatch(removeYourself(conversationId));
+    //   navigate.navigate('Main');
+    // }
+    if (socket) {
+      socket.emit('send_remove_yourself', {
+        conversationId: conversationId,
+        userId: user?.id,
+      });
     }
   };
 
@@ -74,7 +124,7 @@ const ChatOption = ({ route, navigation }) => {
           <MaterialIcons name="delete-outline" size={24} color="red" />
         </View>
       ),
-      content: <Text style={{ color: 'red' }}>Xoá cuộc trò chuyện</Text>,
+      content: <Text style={{ color: 'red' }}>Xoá cuộc hội thoại</Text>,
       action: handleDelConversation,
     },
   ];
@@ -101,6 +151,16 @@ const ChatOption = ({ route, navigation }) => {
       action: handleRemoveYourself,
     },
   ];
+
+  const itemAdmin = {
+    title: (
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+        <MaterialIcons name="delete-outline" size={24} color="red" />
+      </View>
+    ),
+    content: <Text style={{ color: 'red' }}>Giải tán nhóm</Text>,
+    action: handleDelGroup,
+  };
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -257,12 +317,11 @@ const ChatOption = ({ route, navigation }) => {
                 <LineInfor item={item} />
               </Pressable>
             ))}
-            {user?.id === conversation?.admin &&
-              itemsChangeFriend.map((item, index) => (
-                <Pressable key={index} onPress={item.action}>
-                  <LineInfor item={item} />
-                </Pressable>
-              ))}
+            {user?.id === conversation?.admin && (
+              <Pressable onPress={itemAdmin.action}>
+                <LineInfor item={itemAdmin} />
+              </Pressable>
+            )}
           </>
         )}
       </View>

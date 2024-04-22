@@ -1,39 +1,76 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, View, Text } from 'react-native';
 import { Avatar, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
 import { removeUser, assignAdmin } from '../redux/conversationSlice';
 
-const Member = ({ navigation, mem, conversation, setShow, setErr }) => {
+const Member = ({ navigation, mem, conversation, setShow, setErr, socket }) => {
   const [visible, setVisible] = useState(false);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_assign_admin', (data) => {
+        if (data.status === 'success') {
+          dispatch(assignAdmin(data.data));
+          navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+        } else if (data.status === 'fail') {
+          setErr('Bạn không thể thực hiện hành động này!');
+          setShow(true);
+        }
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_remove_member', (data) => {
+        if (data.status === 'success') {
+          dispatch(removeUser(data.data));
+          navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+        } else if (data.status === 'fail') {
+          toast.error('Bạn không thể thực hiện hành động này!');
+        }
+      });
+    }
+  }, [socket]);
+
   const handleAssignAdmin = async (id) => {
-    const data = await ConversationAPI.assignAdminForConversation(id, conversation.id);
-    if (data) {
-      dispatch(assignAdmin({ conversationId: conversation.id, userId: id }));
-      navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+    // const data = await ConversationAPI.assignAdminForConversation(id, conversation.id);
+    // if (data) {
+    //   dispatch(assignAdmin({ conversationId: conversation.id, userId: id }));
+    //   navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+    // }
+
+    if (socket) {
+      socket.emit('send_assign_admin', {
+        conversationId: conversation.id,
+        userId: id,
+      });
     }
   };
 
   const handleRemoveUser = async (id) => {
-    if (conversation?.admin !== user?.id) {
-      return;
-    }
-
     if (conversation.members.length === 3) {
       setVisible(false);
       setErr('Nhóm phải có ít nhất 3 người!');
       setShow(true);
       return;
     }
-    const data = await ConversationAPI.removeUserForConversation(id, conversation.id);
-    if (data) {
-      dispatch(removeUser({ conversationId: conversation.id, userId: id }));
-      navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+    // const data = await ConversationAPI.removeUserForConversation(id, conversation.id);
+    // if (data) {
+    //   dispatch(removeUser({ conversationId: conversation.id, userId: id }));
+    //   navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+    // }
+
+    if (socket) {
+      socket.emit('send_remove_member', {
+        conversationId: conversation.id,
+        userId: id,
+      });
     }
   };
 

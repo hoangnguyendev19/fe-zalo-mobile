@@ -1,26 +1,50 @@
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
 import { addUser } from '../redux/conversationSlice';
+import connectSocket from '../utils/socketConfig';
 
 const AddMember = ({ navigation, route }) => {
   const { user } = useSelector((state) => state.user);
   const { conversation } = route.params;
   const dispatch = useDispatch();
+  const socket = connectSocket();
 
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('send_add_member', (data) => {
+        if (data.status === 'success') {
+          dispatch(addUser(data.data));
+          navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+        } else if (data.status === 'fail') {
+          setErr('Thêm thành viên thất bại!');
+          setVisible(true);
+        }
+      });
+    }
+  }, [socket]);
+
   const handleAddMember = async (id) => {
-    const data = await ConversationAPI.addUserForConversation(id, conversation.id);
-    if (data) {
-      dispatch(addUser({ conversationId: conversation.id, user: data }));
-      navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
-    } else {
-      setErr('Thêm thành viên thất bại!');
-      setVisible(true);
+    // const data = await ConversationAPI.addUserForConversation(id, conversation.id);
+    // if (data) {
+    //   dispatch(addUser({ conversationId: conversation.id, user: data }));
+    //   navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
+    // } else {
+    //   setErr('Thêm thành viên thất bại!');
+    //   setVisible(true);
+    // }
+
+    if (socket) {
+      socket.emit('send_add_member', {
+        userId: id,
+        conversationId: conversation.id,
+        senderId: user.id,
+      });
     }
   };
 
