@@ -1,9 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Avatar, Checkbox, Snackbar } from 'react-native-paper';
-import ImgUser from '../assets/images/img-user.png';
-import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ConversationAPI from '../api/ConversationAPI';
 import { createConversation } from '../redux/conversationSlice';
 import connectSocket from '../utils/socketConfig';
 
@@ -76,14 +74,6 @@ const CreateGroup = ({ navigation }) => {
       type: 'GROUP',
     };
 
-    // const data = await ConversationAPI.createConversation(conversation);
-    // if (data) {
-    //   dispatch(createConversation(data));
-    //   navigation.navigate('Chat', { conversationId: data.id, name: data.name });
-    // } else {
-    //   setErr('Tạo nhóm thất bại!');
-    //   setVisible(true);
-    // }
     if (socket) {
       socket.emit('send_create_group', conversation);
     }

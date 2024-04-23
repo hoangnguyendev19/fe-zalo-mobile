@@ -1,7 +1,7 @@
-import { ScrollView, View } from 'react-native';
-import Member from '../components/Member';
 import { useState } from 'react';
+import { ScrollView, View } from 'react-native';
 import { Snackbar } from 'react-native-paper';
+import Member from '../components/Member';
 import connectSocket from '../utils/socketConfig';
 
 const GroupMember = ({ navigation, route }) => {

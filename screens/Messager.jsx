@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native';
-import MessageCover from '../components/MessageCover';
 import { useSelector } from 'react-redux';
+import MessageCover from '../components/MessageCover';
 
 const Messager = ({ navigation }) => {
   const { conversations } = useSelector((state) => state.conversation);

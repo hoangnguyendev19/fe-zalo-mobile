@@ -1,8 +1,7 @@
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { Avatar, Snackbar } from 'react-native-paper';
 import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Avatar, Snackbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import ConversationAPI from '../api/ConversationAPI';
 import { addUser } from '../redux/conversationSlice';
 import connectSocket from '../utils/socketConfig';
 
@@ -30,15 +29,6 @@ const AddMember = ({ navigation, route }) => {
   }, [socket]);
 
   const handleAddMember = async (id) => {
-    // const data = await ConversationAPI.addUserForConversation(id, conversation.id);
-    // if (data) {
-    //   dispatch(addUser({ conversationId: conversation.id, user: data }));
-    //   navigation.navigate('Chat', { conversationId: conversation.id, name: conversation.name });
-    // } else {
-    //   setErr('Thêm thành viên thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_add_member', {
         userId: id,

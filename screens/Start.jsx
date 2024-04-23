@@ -1,8 +1,7 @@
-import { Image, Pressable, Text, TextBase, View } from 'react-native';
-import Logo from '../assets/images/logo.png';
+import { useEffect } from 'react';
+import { Image, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TokenAPI from '../api/TokenAPI';
-import { useEffect } from 'react';
 
 const Start = ({ navigation }) => {
   useEffect(() => {

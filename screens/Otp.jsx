@@ -1,11 +1,11 @@
+import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { Snackbar, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-import { signup } from '../redux/userSlice';
-import { Snackbar, TextInput } from 'react-native-paper';
-import { useState } from 'react';
 import UserAPI from '../api/UserAPI';
+import { signup } from '../redux/userSlice';
 
 const Otp = ({ navigation, route }) => {
   const [otp, setOtp] = useState('');

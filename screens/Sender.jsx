@@ -1,9 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
-import { setUser } from '../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import UserAPI from '../api/UserAPI';
+import { setUser } from '../redux/userSlice';
 import connectSocket from '../utils/socketConfig';
 
 const Sender = ({ navigation }) => {
@@ -33,13 +32,6 @@ const Sender = ({ navigation }) => {
   }, [socket]);
 
   const handleRevokeFriend = async (id) => {
-    // const data = await UserAPI.revokeFriend(id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    // } else {
-    //   setErr('Thu hồi lời mời thất bại!');
-    //   setVisible(true);
-    // }
     if (socket) {
       socket.emit('send_revoke_friend', {
         senderId: user.id,

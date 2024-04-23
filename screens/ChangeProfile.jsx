@@ -1,23 +1,23 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
-  View,
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Pressable,
-  Image,
-  ActivityIndicator,
+  View,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Avatar, RadioButton, Snackbar } from 'react-native-paper';
-import { convertToDate } from '../utils/handler';
-import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../redux/userSlice';
-import { useNavigation } from '@react-navigation/native';
-import UserAPI from '../api/UserAPI';
 import UploadAPI from '../api/UploadAPI';
+import UserAPI from '../api/UserAPI';
+import { setUser } from '../redux/userSlice';
+import { convertToDate } from '../utils/handler';
 
 const ChangeProfile = () => {
   const { user } = useSelector((state) => state.user);

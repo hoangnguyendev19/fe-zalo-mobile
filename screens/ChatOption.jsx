@@ -1,12 +1,12 @@
+import { AntDesign, Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
-import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import LineInfor from '../components/LineInfor';
-import { useEffect, useState } from 'react';
-import ConversationAPI from '../api/ConversationAPI';
 import { useDispatch, useSelector } from 'react-redux';
+import ConversationAPI from '../api/ConversationAPI';
+import LineInfor from '../components/LineInfor';
 import { deleteConversation, removeYourself } from '../redux/conversationSlice';
-import { useNavigation } from '@react-navigation/native';
 import connectSocket from '../utils/socketConfig';
 
 const ChatOption = ({ route, navigation }) => {
@@ -78,11 +78,7 @@ const ChatOption = ({ route, navigation }) => {
       setVisible(true);
       return;
     }
-    // const data = await ConversationAPI.deleteConversation(conversationId);
-    // if (data) {
-    //   dispatch(deleteConversation(conversationId));
-    //   navigate.navigate('Main');
-    // }
+
     if (socket) {
       socket.emit('send_delete_group', conversationId);
     }
@@ -104,11 +100,6 @@ const ChatOption = ({ route, navigation }) => {
       return;
     }
 
-    // const data = await ConversationAPI.removeYourselfForConversation(conversationId);
-    // if (data) {
-    //   dispatch(removeYourself(conversationId));
-    //   navigate.navigate('Main');
-    // }
     if (socket) {
       socket.emit('send_remove_yourself', {
         conversationId: conversationId,

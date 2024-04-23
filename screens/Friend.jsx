@@ -1,7 +1,7 @@
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { FontAwesome5, AntDesign, Feather } from '@expo/vector-icons';
-import ContactCover from '../components/ContactCover';
 import { useSelector } from 'react-redux';
+import ContactCover from '../components/ContactCover';
 
 const Friend = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);

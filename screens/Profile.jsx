@@ -1,13 +1,11 @@
 import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 
-import background from '../assets/images/img-banner-1.png';
-import avt from '../assets/images/img-user.png';
-import LineInfor from '../components/LineInfor';
-import { EvilIcons, Entypo } from '@expo/vector-icons';
+import { Entypo, EvilIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/userSlice';
 import UserAPI from '../api/UserAPI';
+import LineInfor from '../components/LineInfor';
+import { logout } from '../redux/userSlice';
 import { convertToDate } from '../utils/handler';
 import connectSocket from '../utils/socketConfig';
 

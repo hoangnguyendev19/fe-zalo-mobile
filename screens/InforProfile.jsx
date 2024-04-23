@@ -1,15 +1,14 @@
 import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
 
-import background from '../assets/images/img-banner-1.png';
-import avt from '../assets/images/img-user.png';
-import LineInfor from '../components/LineInfor';
+import { Entypo } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import UserAPI from '../api/UserAPI';
-import { convertToDate } from '../utils/handler';
 import { useDispatch, useSelector } from 'react-redux';
+import UserAPI from '../api/UserAPI';
+import background from '../assets/images/img-banner-1.png';
+import LineInfor from '../components/LineInfor';
 import { setUser } from '../redux/userSlice';
-import { Entypo, AntDesign } from '@expo/vector-icons';
+import { convertToDate } from '../utils/handler';
 import connectSocket from '../utils/socketConfig';
 
 const InforProfile = ({ route, navigation }) => {
@@ -57,15 +56,6 @@ const InforProfile = ({ route, navigation }) => {
   }, [socket]);
 
   const handleDeleteFriend = async () => {
-    // const data = await UserAPI.deleteFriend(currUser.id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    //   navigation.navigate('Main');
-    // } else {
-    //   setErr('Xoá bạn bè thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_delete_friend', {
         senderId: user.id,

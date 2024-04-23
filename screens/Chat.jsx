@@ -1,19 +1,18 @@
+import { Ionicons } from '@expo/vector-icons';
+import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Modal, Snackbar } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import MessageAPI from '../api/MessageAPI';
+import UploadAPI from '../api/UploadAPI';
 import MessageReceiver from '../components/MessageReceiver';
 import MessageSender from '../components/MessageSender';
-import { io } from 'socket.io-client';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import MessageAPI from '../api/MessageAPI';
-import * as ImagePicker from 'expo-image-picker';
-import { Modal, Snackbar } from 'react-native-paper';
-import * as DocumentPicker from 'expo-document-picker';
-import UploadAPI from '../api/UploadAPI';
-import connectSocket from '../utils/socketConfig';
 import { addUser, assignAdmin, deleteConversation, removeUser } from '../redux/conversationSlice';
+import connectSocket from '../utils/socketConfig';
 
-const TYPING_DELAY = 5000; // Adjust the delay as needed
+const TYPING_DELAY = 5000;
 
 const Chat = ({ navigation, route }) => {
   const [content, setContent] = useState('');
