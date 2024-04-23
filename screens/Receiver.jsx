@@ -1,9 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
-import { setUser } from '../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import UserAPI from '../api/UserAPI';
+import { setUser } from '../redux/userSlice';
 import connectSocket from '../utils/socketConfig';
 
 const Receiver = ({ navigation }) => {
@@ -52,14 +51,6 @@ const Receiver = ({ navigation }) => {
   }, [socket]);
 
   const handleAcceptFriend = async (id) => {
-    // const data = await UserAPI.acceptFriend(id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    // } else {
-    //   setErr('Chấp nhận lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_accept_friend', {
         senderId: user.id,
@@ -69,14 +60,6 @@ const Receiver = ({ navigation }) => {
   };
 
   const handleDeleteAcceptFriend = async (id) => {
-    // const data = await UserAPI.deleteAcceptFriend(id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    // } else {
-    //   setErr('Xoá lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_delete_accept_friend', {
         senderId: user.id,

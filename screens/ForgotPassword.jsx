@@ -1,8 +1,8 @@
-import { Text, View, Pressable } from 'react-native';
 import { useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import { Snackbar, TextInput } from 'react-native-paper';
-import UserAPI from '../api/UserAPI';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserAPI from '../api/UserAPI';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');

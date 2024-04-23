@@ -1,7 +1,7 @@
-import { Pressable, ScrollView, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import MessageCover from '../components/MessageCover';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import MessageCover from '../components/MessageCover';
 
 const Group = ({ navigation }) => {
   const { conversations } = useSelector((state) => state.conversation);

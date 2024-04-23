@@ -1,5 +1,5 @@
-import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { View } from 'react-native';
 import Friend from './Friend';
 import Group from './Group';
 

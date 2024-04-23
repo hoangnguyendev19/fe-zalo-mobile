@@ -1,12 +1,12 @@
 import { Link } from '@react-navigation/native';
-import { Text, View, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/userSlice';
-import UserAPI from '../api/UserAPI';
+import { Pressable, Text, View } from 'react-native';
 import { Snackbar, TextInput } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
+import UserAPI from '../api/UserAPI';
+import { login } from '../redux/userSlice';
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('0123456789');

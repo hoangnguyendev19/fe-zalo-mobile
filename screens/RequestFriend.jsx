@@ -1,7 +1,7 @@
-import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Sender from './Sender';
+import { View } from 'react-native';
 import Receiver from './Receiver';
+import Sender from './Sender';
 
 const Tab = createMaterialTopTabNavigator();
 

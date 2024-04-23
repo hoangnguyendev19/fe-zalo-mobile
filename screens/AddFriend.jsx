@@ -1,11 +1,10 @@
+import { Feather } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { Avatar, Snackbar } from 'react-native-paper';
-import ImgUser from '../assets/images/img-user.png';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import UserAPI from '../api/UserAPI';
 import { setUser } from '../redux/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
 import connectSocket from '../utils/socketConfig';
 
 const AddFriend = ({ navigation }) => {
@@ -15,28 +14,9 @@ const AddFriend = ({ navigation }) => {
 
   const [visible, setVisible] = useState(false);
   const [err, setErr] = useState('');
-  const [status, setStatus] = useState('request'); // request - revoke - accept - friend
+  const [status, setStatus] = useState('request');
   const { user } = useSelector((state) => state.user);
   const socket = connectSocket();
-
-  // useEffect(() => {
-  //   if (user && friend) {
-  //     if (user.friendList.filter((fri) => fri.id === friend.id).length > 0) {
-  //       setStatus('friend');
-  //       return;
-  //     }
-
-  //     if (user.sendedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
-  //       setStatus('revoke');
-  //       return;
-  //     }
-  //     if (user.receivedRequestList.filter((fri) => fri.id === friend.id).length > 0) {
-  //       setStatus('accept');
-  //       return;
-  //     }
-  //     setStatus('request');
-  //   }
-  // }, [friend, user]);
 
   useEffect(() => {
     if (socket) {
@@ -142,15 +122,6 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleRequestFriend = async () => {
-    // const data = await UserAPI.requestFriend(friend.id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    //   setStatus('revoke');
-    // } else {
-    //   setErr('Gửi lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_request_friend', {
         senderId: user.id,
@@ -160,15 +131,6 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleRevokeFriend = async () => {
-    // const data = await UserAPI.revokeFriend(friend.id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    //   setStatus('request');
-    // } else {
-    //   setErr('Thu hồi lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_revoke_friend', {
         senderId: user.id,
@@ -178,15 +140,6 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleAcceptFriend = async () => {
-    // const data = await UserAPI.acceptFriend(friend.id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    //   setStatus('friend');
-    // } else {
-    //   setErr('Chấp nhận lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_accept_friend', {
         senderId: user.id,
@@ -196,15 +149,6 @@ const AddFriend = ({ navigation }) => {
   };
 
   const handleDeleteAcceptFriend = async () => {
-    // const data = await UserAPI.deleteAcceptFriend(friend.id);
-    // if (data) {
-    //   dispatch(setUser(data));
-    //   setStatus('request');
-    // } else {
-    //   setErr('Xoá lời mời thất bại!');
-    //   setVisible(true);
-    // }
-
     if (socket) {
       socket.emit('send_delete_accept_friend', {
         senderId: user.id,

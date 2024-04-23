@@ -1,23 +1,23 @@
+import { AntDesign, EvilIcons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { Pressable, TextInput, View } from 'react-native';
-import { EvilIcons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Messager from './Messager';
-import Contact from './Contact';
-import Profile from './Profile';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
 import { Divider, Menu, Snackbar } from 'react-native-paper';
-import { useState, useEffect } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import ConversationAPI from '../api/ConversationAPI';
+import UserAPI from '../api/UserAPI';
 import {
   createConversation,
   deleteConversation,
   getAllConversations,
 } from '../redux/conversationSlice';
-import UserAPI from '../api/UserAPI';
 import { setUser } from '../redux/userSlice';
 import connectSocket from '../utils/socketConfig';
+import Contact from './Contact';
+import Messager from './Messager';
+import Profile from './Profile';
 
 const Tab = createBottomTabNavigator();
 

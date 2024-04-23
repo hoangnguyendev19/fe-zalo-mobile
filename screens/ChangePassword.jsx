@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, Pressable } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import UserAPI from '../api/UserAPI';
-import { useSelector } from 'react-redux';
 
 const ChangePassword = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
